@@ -6,15 +6,15 @@
 // 1) Only works with Fiji
 // 2) No attempt is made to reorder channels
 // 3) Uses file locking when called with a directory as input, but NOT when
-//    called with a specific input file 
+//    called with a specific input file
 //    (in which case we assume that someone else is handling this issue)
-// 
+//
 // (Slightly) Adapted by Greg Jefferis from code at
 // http://rsb.info.nih.gov/ij/macros/BatchProcessFolders.txt
 
 // jefferis@gmail.com
 
-requires("1.42k"); 
+requires("1.42k");
 file = getArgument;
 dir=""
 outputDir=""
@@ -25,7 +25,7 @@ useLocksAndCheckOutput = true; // by default
 run("Bio-Formats Macro Extensions");
 setBatchMode(true);
 
-// 1) Check what arguments we've received 
+// 1) Check what arguments we've received
 // --------------------------------------
 //print("file = "+file);
 if (file!=""){
@@ -33,7 +33,7 @@ if (file!=""){
 	if (arg.length<2 || arg.length>2) {
 		exit();
 	}
-	
+
 	// ... now deal with directories
 	if(arg[0]=="" || arg[1]==""){
 		exit();
@@ -115,8 +115,7 @@ function processFile(dir,outputDir,file) {
 			File.saveString("",lockpath);
 		}
 
-		imagesAlreadyOpen=nImages;
-		Ext.openImagePlus(path);
+		open(path);
 		processImage();
 		outfilestem=outputDir+substring(file,0,lastIndexOf(file,"."))+"_skel";
 		setKeyDown("alt");
