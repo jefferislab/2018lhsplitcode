@@ -122,6 +122,7 @@ function processFile(dir,outputDir,file) {
 		run("Nrrd ... ", "nrrd=["+outfilestem+".nrrd]");
 		setKeyDown("none");
 		close();
+		close();
 		if(useLocksAndCheckOutput){
 			File.delete(lockpath);
 		}
