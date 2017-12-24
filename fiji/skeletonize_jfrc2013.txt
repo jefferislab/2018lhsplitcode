@@ -97,7 +97,7 @@ function processFiles(dir,outputDir) {
 }
 
 function processFile(dir,outputDir,file) {
-	if (!endsWith(file, "skel.nrrd") && startsWith(file, "seg_whole")) {
+	if (endsWith(file, "nrrd") && !endsWith(file, "skel.nrrd") && startsWith(file, "seg_whole")) {
 		path = dir+file;
 		if(useLocksAndCheckOutput){
 			// Check if output already exists
