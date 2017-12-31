@@ -99,12 +99,15 @@ function processFiles(dir,outputDir) {
 function processFile(dir,outputDir,file) {
 	if (endsWith(file, "nrrd") && !endsWith(file, "skel.nrrd") && startsWith(file, "seg_whole")) {
 		path = dir+file;
+		outfilestem=outputDir+substring(file, 0, lastIndexOf(file, ".")) + "_skel";
+		outfilepath=outfilestem + "." + outputformat;
 		if(useLocksAndCheckOutput){
 			// Check if output already exists
-			c1outpath=outputDir+substring(file,0,lengthOf(file)-4)+"_01."+outputformat;
-			if(File.exists(c1outpath)){
-				print("Skipping file: " + file + " since " + c1outpath + " already exists");
+			if(File.exists(outfilepath)){
+				print("Skipping file: " + file + " since " + outfilepath + " already exists");
 				return;
+			} else {
+				print("Processing file: " + file + " to make " + outfilepath);
 			}
 			// Check if someone is already working on this
 			lockpath=path+'.lock';
@@ -117,9 +120,8 @@ function processFile(dir,outputDir,file) {
 
 		open(path);
 		processImage();
-		outfilestem=outputDir+substring(file,0,lastIndexOf(file,"."))+"_skel";
 		setKeyDown("alt");
-		run("Nrrd ... ", "nrrd=["+outfilestem+".nrrd]");
+		run("Nrrd ... ", "nrrd=["+outfilepath+"]");
 		setKeyDown("none");
 		close();
 		close();
