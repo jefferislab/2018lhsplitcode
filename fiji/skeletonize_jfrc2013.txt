@@ -135,6 +135,11 @@ function processFile(dir,outputDir,file) {
 function processImage() {
   run("Properties...", "channels=1 slices=436 frames=1 unit=microns pixel_width=0.3800000 pixel_height=0.3800000 voxel_depth=0.3800000");
   run("Scale...", "x=0.5 y=0.5 z=0.5 width=725 height=362 depth=218 interpolation=Bilinear average process");
+  // setAutoThreshold("Default dark stack");
+  setAutoThreshold("IsoData dark stack");
+  setOption("BlackBackground", false);
+  run("Convert to Mask", "method=IsoData background=Dark black");
+  // run("Convert to Mask", "method=Default background=Dark black");
   run("Skeletonize (2D/3D)");
 }
 
