@@ -50,12 +50,26 @@ barplot(height=(Ideal[,3]), names.arg=Ideal[,1], col="orange", xlab="Cell Types"
 dev.off()
 ```
 
+```{r, echo=FALSE}
+num_screened<-2444
+num_imaged<-1095
+num_annotated<-410
+num_good<-259 #Have subtracted the number of ideals 
+num_Ideal<-123
+screened<-data.frame(group=c("Total Lines Screened", "Good Lines", "Ideal Lines"),
+                     value=c(num_screened-num_good-num_Ideal, num_good, num_Ideal)) 
 
-
-
-
-
-
+pdf(here("Figure1/Screen_overview.pdf"), width = 3.46, height = 4.68)
+g<-ggplot(screened, aes(x="", y=value, fill=group))
+g<-g+scale_y_continuous( breaks=c(0, 500, 1000, 1500, 2000, num_screened))
+g<-g+geom_bar(width=1, stat="identity", color="black")
+g<-g+coord_cartesian(expand = FALSE)
+g<-g+labs(y="Number of Split-GAL4 lines", x="")
+g<-g+guides(fill=guide_legend(title=NULL))
+g<-g+scale_fill_manual(values=c("blue","#E69F00", "#999999" ))
+g
+dev.off()
+```
 
 
 
