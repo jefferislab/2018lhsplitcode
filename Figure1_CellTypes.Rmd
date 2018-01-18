@@ -1,5 +1,5 @@
 ---
-title: "Code For Figure 1_LM"
+title: "Code For Figure 1_CellTypes"
 author: "Mike Dolan"
 output: html_document
 ---
@@ -11,7 +11,7 @@ library(here) #Sets the root directory, use here() to call it
 library(ggplot2)
 library(xlsx)
 library(dplyr)
-
+here()
 file.symlink("/Users/dolanm/Google Drive/SplitGAL4_Paper/Figures/Figure1", here())
 ```
 
