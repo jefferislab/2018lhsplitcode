@@ -2,6 +2,7 @@
 title: "Figure1_EM"
 author: "Mike"
 ---
+For plotting single traced neurons to illustrate their polarity 
 Load up the required packages, functions and the symlink to Google Drive 
 ```{r, echo=FALSE, results="hide"}
 library(here)
