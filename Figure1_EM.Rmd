@@ -1,0 +1,73 @@
+---
+title: "Figure1_EM"
+author: "Mike"
+---
+Load up the required packages, functions and the symlink to Google Drive 
+```{r, echo=FALSE, results="hide"}
+library(here)
+library(dplyr)
+library(nat)
+library(elmr)
+library(nat.templatebrains)
+library(nat.flybrains)
+download_jefferislab_registrations()
+set3d <- function(pos = c("front", "left", "back", "right",
+                          "ventral", "dorsal"), zoom = 0.7, ...) {
+  pos <- match.arg(pos)
+  m <- diag(c(1, -1, -1, 1)) # front
+  if (pos == "left") {
+    m <- diag(c(0, -1, 0, 1))
+    m[1, 3] <- 1
+    m[3, 1] <- 1
+  }
+  if (pos == "back") {
+    m <- diag(c(-1, -1, 1, 1))
+  }
+  if (pos == "right") {
+    m <- diag(c(0, -1, 0, 1))
+    m[1, 3] <- m[3, 1] <- -1
+  }
+  if (pos == "ventral") {
+    m <- diag(c(1, -1, -1, 1))
+  }
+  if (pos == "dorsal") {
+    m <- diag(c(1, 1, 1, 1))
+  }
+  4
+  view3d(userMatrix = m, zoom = zoom, ...)
+}
+here()
+file.symlink("/Users/dolanm/Google Drive/SplitGAL4_Paper/Figures/Figure1", here())
+
+```
+
+Load up the data and examine which tracings are available
+```{r, echo=FALSE}
+emmatches_JFRC2013<-readRDS("Figure1/emmatches_JFRC2013.rds")
+celltypes<-select(emmatches_JFRC2013[,],cell.type, Miketype)
+celltypes<-mutate(celltypes, index=1:nrow(celltypes))
+celltypes
+```
+
+Create LH masks in JFRC2013 space
+```{r, echo=FALSE}
+npmask<-subset(FCWBNP.surf, "LH_L")
+npmask.jfrc2013<-xform_brain(x=npmask, sample = FCWB, reference = JFRC2013)
+```
+
+List and plot the neurons we are interested in showing as an inset to support the LM polarity data
+```{r, echo=FALSE}
+Cells2Plot<-c("3A", "116A", "70C")
+for(i in 1:length(Cells2Plot)){
+    cell<-Cells2Plot[i]
+    index<-filter(celltypes, Miketype==cell)$index
+    
+    clear3d()
+    plot3d(emmatches_JFRC2013[[index]], WithConnectors = TRUE, WithNodes = FALSE
+           , lwd=1, col="black", soma=TRUE)
+    plot3d(npmask.jfrc2013, alpha=0.1)
+    #plot3d(JFRC2013)
+    set3d("front", 0.7) #Function that sets the angle and zoom 
+    snapshot3d(paste0("Figure1/", cell, ".png"))
+}
+```
