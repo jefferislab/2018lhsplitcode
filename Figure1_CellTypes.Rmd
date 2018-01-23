@@ -50,6 +50,7 @@ barplot(height=(Ideal[,3]), names.arg=Ideal[,1], col="orange", xlab="Cell Types"
 dev.off()
 ```
 
+Plot the total number lines screened and the number of line we found. 
 ```{r, echo=FALSE}
 num_screened<-2444
 num_imaged<-1095
@@ -71,5 +72,14 @@ g
 dev.off()
 ```
 
-
-
+Some code to do the same as above in base R plot for consistancy. 
+```{r, echo=FALSE}
+ticks<-seq(from=0, to=2000, 250)
+screened<-c(num_screened,num_imaged, num_good,num_Ideal)
+screened<-desc(screened)
+pdf(here("Figure1/Screen_Overview_base.pdf"), width = 9.91, height = 4.68)                
+barplot(screened, names=c("Total", "Imaged" , "Good", "Ideal"), xlab="Number of Split-GAL4 lines"
+        , col=c("grey", "forest green", "blue", "orange"), beside=TRUE, axes = FALSE, horiz = TRUE)
+axis(1, at = c(ticks, num_screened))
+dev.off()
+```
