@@ -65,10 +65,10 @@ for(i in 1:length(Cells2Plot)){
     
     clear3d()
     plot3d(emmatches_JFRC2013[[index]], WithConnectors = TRUE, WithNodes = FALSE
-           , lwd=1, col="black", soma=TRUE)
-    plot3d(npmask.jfrc2013, alpha=0.1)
-    #plot3d(JFRC2013)
-    set3d("front", 0.7) #Function that sets the angle and zoom 
+           , lwd=2, col="black", soma=TRUE)
+    plot3d(npmask.jfrc2013, alpha=0.2)
+    plot3d(JFRC2013, alpha=0.1)
+    set3d("front", 0.7, zoom = 0.8) #Function that sets the angle and zoom 
     snapshot3d(paste0("Figure1/", cell, ".png"))
 }
 ```
