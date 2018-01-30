@@ -2,7 +2,8 @@
 title: "Figure1_EM"
 author: "Mike"
 ---
-For plotting single traced neurons to illustrate their polarity 
+For plotting single traced neurons to illustrate their polarity. Also the code used to make Figure 1A 
+
 Load up the required packages, functions and the symlink to Google Drive 
 ```{r, echo=FALSE, results="hide"}
 library(here)
@@ -67,8 +68,29 @@ for(i in 1:length(Cells2Plot)){
     plot3d(emmatches_JFRC2013[[index]], WithConnectors = TRUE, WithNodes = FALSE
            , lwd=2, col="black", soma=TRUE)
     plot3d(npmask.jfrc2013, alpha=0.2)
-    plot3d(JFRC2013, alpha=0.1)
+    #plot3d(JFRC2013, alpha=0.1)
     set3d("front", 0.7, zoom = 0.8) #Function that sets the angle and zoom 
     snapshot3d(paste0("Figure1/", cell, ".png"))
 }
 ```
+
+To make Figure 1A
+```{r, echo=FALSE}
+#Sort out the masks
+LHmask<-subset(FCWBNP.surf, "LH_R")
+LHmask.jfrc2<-xform_brain(x=LHmask, sample = FCWB, reference = JFRC2)
+CAmask<-subset(FCWBNP.surf, "MB_CA_R")
+CAmask.jfrc2<-xform_brain(x=CAmask, sample = FCWB, reference = JFRC2)
+ALmask<-subset(FCWBNP.surf, "AL_R")
+ALmask.jfrc2<-xform_brain(x=ALmask, sample = FCWB, reference = JFRC2)
+DA1.jfrc2<-readRDS("Figure1/da1.jfrc2.rds")
+clear3d()
+plot3d(JFRC2, alpha=0.2)
+plot3d(LHmask.jfrc2, alpha=0.2)
+plot3d(CAmask.jfrc2, alpha=0.2, col="green")
+plot3d(ALmask.jfrc2, alpha=0.2)
+plot3d(DA1.jfrc2, lwd=4, col="black")
+snapshot3d("Figure1/F1A.png")
+```
+
+
