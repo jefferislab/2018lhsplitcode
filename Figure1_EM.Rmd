@@ -77,19 +77,23 @@ for(i in 1:length(Cells2Plot)){
 To make Figure 1A
 ```{r, echo=FALSE}
 #Sort out the masks
-LHmask<-subset(FCWBNP.surf, "LH_R")
+LHmask<-subset(FCWBNP.surf, "LH_L")
 LHmask.jfrc2<-xform_brain(x=LHmask, sample = FCWB, reference = JFRC2)
-CAmask<-subset(FCWBNP.surf, "MB_CA_R")
+CAmask<-subset(FCWBNP.surf, "MB_CA_L")
 CAmask.jfrc2<-xform_brain(x=CAmask, sample = FCWB, reference = JFRC2)
-ALmask<-subset(FCWBNP.surf, "AL_R")
+ALmask<-subset(FCWBNP.surf, "AL_L")
 ALmask.jfrc2<-xform_brain(x=ALmask, sample = FCWB, reference = JFRC2)
 DA1.jfrc2<-readRDS("Figure1/da1.jfrc2.rds")
+DA1.jfrc2<-mirror_brain(DA1.jfrc2, brain=JFRC2, mirrorAxis = "X", transform = "warp")
 clear3d()
 plot3d(JFRC2, alpha=0.2)
 plot3d(LHmask.jfrc2, alpha=0.2)
 plot3d(CAmask.jfrc2, alpha=0.2, col="green")
 plot3d(ALmask.jfrc2, alpha=0.2)
 plot3d(DA1.jfrc2, lwd=4, col="black")
+set3d("front", 0.7, zoom = 0.8) #Function that sets the angle and zoom 
+
+
 snapshot3d("Figure1/F1A.png")
 ```
 
