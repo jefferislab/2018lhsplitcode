@@ -1,0 +1,89 @@
+---
+title: "Figure4"
+author: "Mike"
+---
+#For plotting the heatmaps and brain regions in Figure 4
+
+First load up the required libraries and functions
+```{r, echo=FALSE, results="hide"}
+library(here)
+library(dplyr)
+library(NMF)                # aheatmap()
+library(nat)
+library(elmr)
+library(nat.templatebrains)
+library(nat.flybrains)
+download_jefferislab_registrations()
+readin<-function(file) {
+  as.matrix(read.table(file, header=TRUE,row.names=1))
+} #For reading in the text files containing LM overlap data 
+set3d <- function(pos = c("front", "left", "back", "right",
+                          "ventral", "dorsal"), zoom = 0.7, ...) {
+  pos <- match.arg(pos)
+  m <- diag(c(1, -1, -1, 1)) # front
+  if (pos == "left") {
+    m <- diag(c(0, -1, 0, 1))
+    m[1, 3] <- 1
+    m[3, 1] <- 1
+  }
+  if (pos == "back") {
+    m <- diag(c(-1, -1, 1, 1))
+  }
+  if (pos == "right") {
+    m <- diag(c(0, -1, 0, 1))
+    m[1, 3] <- m[3, 1] <- -1
+  }
+  if (pos == "ventral") {
+    m <- diag(c(1, -1, -1, 1))
+  }
+  if (pos == "dorsal") {
+    m <- diag(c(1, 1, 1, 1))
+  }
+  4
+  view3d(userMatrix = m, zoom = zoom, ...)
+}
+here()
+file.symlink("/Users/dolanm/Google Drive/SplitGAL4_Paper/Figures/Figure4", here())
+```
+
+For plotting LHON axons by neuropil regions 
+```{r, echo=FALSE}
+LHON_neuropil<-readin("Figure4/Output_axonmemb_x_nc82_nc82.txt")
+aheatmap(x = LHON_neuropil, filename=paste0("Figure4/LHON_neuropil.pdf")
+       , fontsize = 12, Colv = FALSE,  cexRow = 2, cexCol = 5)
+```
+
+Plot the SLP and the LH 
+```{r, echo=FALSE}
+clear3d()
+LHmask<-subset(FCWBNP.surf, "LH_L")
+LHmask.jfrc2013<-xform_brain(x=LHmask, sample = FCWB, reference = JFRC2013)
+SLPmask<-subset(FCWBNP.surf, "SLP_L")
+SLPmask.jfrc2013<-xform_brain(x=SLPmask, sample = FCWB, reference = JFRC2013)
+plot3d(SLPmask.jfrc2013, alpha=0.2, col="magenta")
+plot3d(LHmask.jfrc2013, alpha=0.2, col="red")
+plot3d(JFRC2013, alpha=0.15)
+set3d("front", 0.7, zoom = 0.8) #Function that sets the angle and zoom 
+snapshot3d("Figure4/SLP.png")
+```
+
+Plot the SIP and the LH 
+```{r, echo=FALSE}
+clear3d()
+LHmask<-subset(FCWBNP.surf, "LH_L")
+LHmask.jfrc2013<-xform_brain(x=LHmask, sample = FCWB, reference = JFRC2013)
+SLPmask<-subset(FCWBNP.surf, "SIP_L")
+SLPmask.jfrc2013<-xform_brain(x=SLPmask, sample = FCWB, reference = JFRC2013)
+plot3d(SLPmask.jfrc2013, alpha=0.2, col="green")
+plot3d(LHmask.jfrc2013, alpha=0.2, col="red")
+plot3d(JFRC2013, alpha=0.15)
+set3d("front", 0.7, zoom = 0.8) #Function that sets the angle and zoom 
+snapshot3d("Figure4/SIP.png")
+```
+
+For plotting LHON axons by neuropil regions 
+```{r, echo=FALSE}
+LHON_LHLN<-readin("Figure4/Local_memb_x_Output_den.txt")
+aheatmap(x = LHON_LHLN, filename=paste0("Figure4/LHON_LHLN.pdf")
+         ,fontsize = 9, cexRow = 2, cexCol = 5.3)
+```
