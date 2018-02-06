@@ -81,7 +81,7 @@ set3d("front", 0.7, zoom = 0.8) #Function that sets the angle and zoom
 snapshot3d("Figure4/SIP.png")
 ```
 
-For plotting LHON axons by neuropil regions 
+For plotting the overlap analysis of LHON dendrites and local LH neurons  
 ```{r, echo=FALSE}
 LHON_LHLN<-readin("Figure4/Local_memb_x_Output_den.txt")
 aheatmap(x = LHON_LHLN, filename=paste0("Figure4/LHON_LHLN.pdf")
