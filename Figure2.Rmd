@@ -63,7 +63,7 @@ for(i in 1:length(Cells2Plot)){
     if(length(index)==0) next
     clear3d()
     plot3d(EMmatches[[index[1]]], WithConnectors = FALSE, WithNodes = FALSE
-           , lwd=2, col="black", soma=FALSE)
+           , lwd=6, col="black", soma=TRUE)
     plot3d(npmask.jfrc2013, alpha=0.2)
     #plot3d(JFRC2013, alpha=0.1)
     set3d("front", 0.7, zoom = 0.8) #Function that sets the angle and zoom 
