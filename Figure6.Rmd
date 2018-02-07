@@ -1,0 +1,42 @@
+---
+title: "Figure6"
+author: "Mike"
+---
+#Figure6 Plotting 
+Code to plot the MB and DAN heatmaps. Note: EM figures from Li will be made by them initially. 
+
+First load up the required libraries and functions
+```{r, echo=FALSE, results="hide"}
+library(here)
+library(dplyr)
+library(xlsx)
+library(NMF)                # aheatmap()
+library(ggplot2)
+readin<-function(file) {
+  as.matrix(read.table(file, header=TRUE,row.names=1))
+}
+here()
+file.symlink("/Users/dolanm/Google Drive/SplitGAL4_Paper/Figures/Figure6", here())
+```
+
+Load and plot the overlap analysis of LHON axons and MBON Axons  
+```{r, echo=FALSE}
+LHON_MBON<-readin(file = "Figure6/Output_axonmemb_x_MBON_axon.txt")
+aheatmap(x = LHON_MBON, filename=paste0("Figure6/LHON_MBON.pdf")
+         ,fontsize = 10, cexRow = 3, cexCol = 0.75)
+```
+
+Load and plot the overlap analysis of LHON axons and DAN dendrites 
+```{r, echo=FALSE}
+LHON_DAN<-readin(file = "Figure6/Output_axonmemb_x_DAN_den.txt")
+aheatmap(x = LHON_DAN, filename=paste0("Figure6/LHON_DAN.pdf")
+         ,fontsize = 10, cexRow =3, cexCol = 0.75)
+```
+
+
+```{r, echo=FALSE}
+```
+
+
+```{r, echo=FALSE}
+```
