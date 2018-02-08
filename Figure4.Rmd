@@ -11,6 +11,7 @@ library(dplyr)
 library(NMF)                # aheatmap()
 library(nat)
 library(elmr)
+library(xlsx)
 library(nat.templatebrains)
 library(nat.flybrains)
 download_jefferislab_registrations()
@@ -46,13 +47,6 @@ here()
 file.symlink("/Users/dolanm/Google Drive/SplitGAL4_Paper/Figures/Figure4", here())
 ```
 
-For plotting LHON axons by neuropil regions 
-```{r, echo=FALSE}
-LHON_neuropil<-readin("Figure4/Output_axonmemb_x_nc82_nc82.txt")
-aheatmap(x = LHON_neuropil, filename=paste0("Figure4/LHON_neuropil.pdf")
-       , fontsize = 12, Colv = FALSE,  cexRow = 2, cexCol = 5)
-```
-
 Plot the SLP and the LH 
 ```{r, echo=FALSE}
 clear3d()
@@ -85,5 +79,14 @@ For plotting the overlap analysis of LHON dendrites and local LH neurons
 ```{r, echo=FALSE}
 LHON_LHLN<-readin("Figure4/Local_memb_x_Output_den.txt")
 aheatmap(x = LHON_LHLN, filename=paste0("Figure4/LHON_LHLN.pdf")
-         ,fontsize = 9, cexRow = 2, cexCol = 5.3)
+         ,fontsize = 9, cexRow = 2, cexCol = 5.3, treeheight = 10)
 ```
+
+For plotting the overlap analysis of LHONs by LHONs, with modified matrix presentation and NT information 
+```{r, echo=FALSE}
+LHON_LHON<-readin("Figure4/Output_axonmemb_x_Output_axonmemb.txt")
+diag(LHON_LHON)<--1
+aheatmap(x = LHON_LHON, filename=paste0("Figure4/LHON_LHON.pdf")
+         ,fontsize = 9, cexRow = 1, cexCol = 1, Rowv = FALSE, treeheight = 10)
+```
+
