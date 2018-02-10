@@ -10,6 +10,7 @@ library(here)
 library(dplyr)
 library(nat)
 library(elmr)
+library(catmaid)
 library(nat.templatebrains)
 library(nat.flybrains)
 download_jefferislab_registrations()
@@ -63,13 +64,18 @@ Cells2Plot<-c("3A", "116A", "70C")
 for(i in 1:length(Cells2Plot)){
     cell<-Cells2Plot[i]
     index<-filter(celltypes, Miketype==cell)$index
-    
     clear3d()
-    plot3d(emmatches_JFRC2013[[index]], WithConnectors = TRUE, WithNodes = FALSE
+    plot3d(emmatches_JFRC2013[[index]], WithConnectors = FALSE, WithNodes = FALSE
            , lwd=2, col="black", soma=TRUE)
     plot3d(npmask.jfrc2013, alpha=0.2)
+    #Add the custom, bigger connectors (plot3d's representations are too small)
+    synapses<-connectors(emmatches_JFRC2013[[index]])
+    presynapses<-filter(synapses, prepost==0)
+    postsynapses<-filter(synapses, prepost==1)
+    spheres3d(xyzmatrix(presynapses), col="red", radius = 0.5)
+    spheres3d(xyzmatrix(postsynapses), col="cyan", radius = 0.5)
     #plot3d(JFRC2013, alpha=0.1)
-    set3d("front", 0.7, zoom = 0.8) #Function that sets the angle and zoom 
+    set3d("front", 0.7, zoom = 0.7) #Function that sets the angle and zoom 
     snapshot3d(paste0("Figure1/", cell, ".png"))
 }
 ```
