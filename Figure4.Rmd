@@ -75,6 +75,20 @@ set3d("front", 0.7, zoom = 0.8) #Function that sets the angle and zoom
 snapshot3d("Figure4/SIP.png")
 ```
 
+Plot the SMP and the LH 
+```{r, echo=FALSE}
+clear3d()
+LHmask<-subset(FCWBNP.surf, "LH_L")
+LHmask.jfrc2013<-xform_brain(x=LHmask, sample = FCWB, reference = JFRC2013)
+SLPmask<-subset(FCWBNP.surf, "SMP")
+SLPmask.jfrc2013<-xform_brain(x=SLPmask, sample = FCWB, reference = JFRC2013)
+plot3d(SLPmask.jfrc2013, alpha=0.2, col="cyan")
+plot3d(LHmask.jfrc2013, alpha=0.2, col="red")
+plot3d(JFRC2013, alpha=0.15)
+set3d("front", 0.7, zoom = 0.8) #Function that sets the angle and zoom 
+snapshot3d("Figure4/SMP.png")
+```
+
 For plotting the overlap analysis of LHON dendrites and local LH neurons  
 ```{r, echo=FALSE}
 LHON_LHLN<-readin("Figure4/Local_memb_x_Output_den.txt")
@@ -82,11 +96,15 @@ aheatmap(x = LHON_LHLN, filename=paste0("Figure4/LHON_LHLN.pdf")
          ,fontsize = 9, cexRow = 2, cexCol = 5.3, treeheight = 10)
 ```
 
-For plotting the overlap analysis of LHONs by LHONs, with modified matrix presentation and NT information 
+For plotting the overlap analysis of LHONs by LHONs, with modified matrix presentation and NT information. Note remove the 29A modification when I rerun everything with the final dataset
 ```{r, echo=FALSE}
 LHON_LHON<-readin("Figure4/Output_axonmemb_x_Output_axonmemb.txt")
 diag(LHON_LHON)<--1
+
+LHON_LHON<-subset(LHON_LHON, colnames(LHON_LHON)!="CellType_29A")
+LHON_LHON<-LHON_LHON[,-23]
+
 aheatmap(x = LHON_LHON, filename=paste0("Figure4/LHON_LHON.pdf")
-         ,fontsize = 9, cexRow = 1, cexCol = 1, Rowv = FALSE, treeheight = 10)
+         ,fontsize = 9, cexRow = 1, cexCol = 1, Rowv = FALSE, treeheight = 15)
 ```
 
