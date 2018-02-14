@@ -1,0 +1,66 @@
+---
+title: "Figure5"
+author: "Mike"
+---
+#For plotting the heatmaps and running the analyses in Figure5. 
+
+First load up the required libraries and functions
+```{r, echo=FALSE, results="hide"}
+library(here)
+library(dplyr)
+library(NMF)                # aheatmap()
+library(nat)
+library(elmr)
+library(xlsx)
+library(nat.templatebrains)
+library(nat.flybrains)
+download_jefferislab_registrations()
+readin<-function(file) {
+  as.matrix(read.table(file, header=TRUE,row.names=1))
+} #For reading in the text files containing LM overlap data 
+set3d <- function(pos = c("front", "left", "back", "right",
+                          "ventral", "dorsal"), zoom = 0.7, ...) {
+  pos <- match.arg(pos)
+  m <- diag(c(1, -1, -1, 1)) # front
+  if (pos == "left") {
+    m <- diag(c(0, -1, 0, 1))
+    m[1, 3] <- 1
+    m[3, 1] <- 1
+  }
+  if (pos == "back") {
+    m <- diag(c(-1, -1, 1, 1))
+  }
+  if (pos == "right") {
+    m <- diag(c(0, -1, 0, 1))
+    m[1, 3] <- m[3, 1] <- -1
+  }
+  if (pos == "ventral") {
+    m <- diag(c(1, -1, -1, 1))
+  }
+  if (pos == "dorsal") {
+    m <- diag(c(1, 1, 1, 1))
+  }
+  4
+  view3d(userMatrix = m, zoom = zoom, ...)
+}
+here()
+file.symlink("/Users/dolanm/Google Drive/SplitGAL4_Paper/Figures/Figure5", here())
+```
+
+Load up the LHON dendrite x PN axon overlap data and plot it for the first panel. Need to edit the matrix to remove some unclear glomeruli
+```{r, echo=FALSE}
+LHON_PN<-readin("Figure5/Output_den_x_Mask_PN_PN.txt")
+
+aheatmap(x = LHON_PN, filename=paste0("Figure5/LHON_PN.pdf")
+         ,fontsize = 9, cexRow = 1, cexCol = 2, Colv = FALSE, treeheight = 15)
+```
+
+
+```{r, echo=FALSE}
+```
+
+```{r, echo=FALSE}
+```
+
+```{r, echo=FALSE}
+```
