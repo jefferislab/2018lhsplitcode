@@ -2,7 +2,7 @@
 title: "Figure5"
 author: "Mike"
 ---
-#For plotting the heatmaps and running the analyses in Figure5. 
+#For plotting the heatmaps and running the analyses in Figure5 and FigureS5
 
 First load up the required libraries and functions
 ```{r, echo=FALSE, results="hide"}
@@ -45,22 +45,60 @@ set3d <- function(pos = c("front", "left", "back", "right",
 }
 here()
 file.symlink("/Users/dolanm/Google Drive/SplitGAL4_Paper/Figures/Figure5", here())
+file.symlink("/Users/dolanm/Google Drive/SplitGAL4_Paper/Figures/FigureS5", here())
 ```
 
-Load up the LHON dendrite x PN axon overlap data and plot it for the first panel. Need to edit the matrix to remove some unclear glomeruli
+Plot images of the IPS, GNG (part of SEZ) and the LAL (lateral accessory lobe/posterior antennal lobe), which are the main input dendritic zones for non-canonical LH input 
+```{r, echo=FALSE}
+clear3d()
+LHmask<-subset(FCWBNP.surf, "LH_L")
+LHmask.jfrc2013<-xform_brain(x=LHmask, sample = FCWB, reference = JFRC2013)
+npmask<-subset(FCWBNP.surf, "LAL_L")
+npmask.jfrc2013<-xform_brain(x=npmask, sample = FCWB, reference = JFRC2013)
+plot3d(npmask.jfrc2013, alpha=0.2, col="cyan")
+plot3d(LHmask.jfrc2013, alpha=0.2, col="red")
+plot3d(JFRC2013, alpha=0.15)
+set3d("front", 0.7, zoom = 0.8) #Function that sets the angle and zoom 
+snapshot3d("Figure5/LAL.png")
+```
+
+Load up the LHON dendrite x PN axon overlap data and plot it for the supplementary figure S5. Need to edit the matrix to remove some unclear glomeruli
 ```{r, echo=FALSE}
 LHON_PN<-readin("Figure5/Output_den_x_Mask_PN_PN.txt")
 
-aheatmap(x = LHON_PN, filename=paste0("Figure5/LHON_PN.pdf")
+aheatmap(x = LHON_PN, filename=paste0("FigureS5/LHON_PN.pdf")
          ,fontsize = 9, cexRow = 1, cexCol = 2, Colv = FALSE, treeheight = 15)
 ```
 
-
+LH gets other inputs in addition to the projection neurons. Load up the Input data, including taste and temperature PN data using lines identified in other studies. Combine them into one matrix and plot 
 ```{r, echo=FALSE}
+LHON_LHIN<-t(readin("Figure5/Input_axonmemb_x_Output_den.txt"))
+LHON_Temp<-readin("Figure5/Output_den_x_TempPNs_axonmemb.txt")
+LHON_Taste<-readin("Figure5/Output_den_x_TastePNs_axonmemb.txt")
+LHON_input<-cbind(LHON_LHIN, LHON_Temp, LHON_Taste)
 ```
 
+Next want to remove unwanted/unclear cell-types from the input designation and add modality tracts to the LHON_input heatmap. 
 ```{r, echo=FALSE}
+#celltype_remove<-c("145", "PN1", "PN2",  )
+#subset(LHON_LHON, colnames(LHON_LHON)!="CellType_29A")
+
+#write.xlsx(x = dimnames(LHON_input)[[2]], file = "Figure5/LHON_Input_tracks.xlsx")
+modality<-read.xlsx(file = "Figure5/LHON_Input_tracks.xlsx", sheetIndex = 1)
+aheatmap(x = LHON_input, filename=paste0("Figure5/LHON_input.pdf")
+         , annCol  = modality$Modality, annColors = "rainbow", annLegend = FALSE
+         ,fontsize = 10, cexRow = 2, cexCol = 0.6, Colv = FALSE, treeheight = 8)
 ```
 
+Combine all the LH input (PN, TPN, Visual, Taste etc) to identify LHONs that integrate olfactory and temperature data and two view the different clusters of inputs to the LH 
 ```{r, echo=FALSE}
+LHIN_all<-cbind(LHON_PN, LHON_LHIN)
+aheatmap(x = LHIN_all, filename=paste0("Figure5/LHON_LHIN_PN.pdf")
+         ,fontsize = 10, cexRow = 2, cexCol = 0.6,  treeheight = 8)
+```
+
+Identify LH regions that are olfactory priviliged or multimodal 
+```{r, echo=FALSE}
+
+
 ```
