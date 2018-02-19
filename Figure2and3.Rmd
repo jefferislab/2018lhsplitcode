@@ -41,15 +41,16 @@ set3d <- function(pos = c("front", "left", "back", "right",
   view3d(userMatrix = m, zoom = zoom, ...)
 }
 here()
-file.symlink("/Users/dolanm/Google Drive/SplitGAL4_Paper/Figures/Figure2", here())
+file.symlink("/Users/dolanm/Google Drive/SplitGAL4_Paper/Figures/Figure2and3", here())
 ```
 
-Load up the EM skeletons (in JFRC2013 space) and plot the cell-types that have a skeleton attached. Note that this dataset comes with significant metadata. Then load up a list of all the LHONs (in a spreadsheet file creating during figuremaking)   
+Load up the EM skeletons (in JFRC2013 space) and plot the cell-types that have a skeleton attached. Note that this dataset comes with significant metadata. Then load up a list of all the LHONs, LHLNs and LHINs (in a spreadsheet file creating during figuremaking)   
 ```{r, echo=FALSE}
 EMmatches<-readRDS(file = "Figure2/emmatches_JFRC2013.rds")
 celltypes<-data.frame(EMmatches[, c(1,3)], 1:nrow(EMmatches[,]))
 names(celltypes)<-c("celltype", "Miketype", "index")
-LHONs<-read.xlsx(file = "Figure2/Figure2_supp_info.xlsx", sheetIndex = 1)[,1:2]
+LHONs<-read.xlsx(file = "Figure2and3/Figure2and3_supp_info.xlsx", sheetIndex = 1)[,1:2]
+
 ```
 
 For each cell-type listed as an LHON, plot the corresponding skeleton and save to the figure directory 
