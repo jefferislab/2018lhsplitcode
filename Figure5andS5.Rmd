@@ -48,18 +48,18 @@ file.symlink("/Users/dolanm/Google Drive/SplitGAL4_Paper/Figures/Figure5", here(
 file.symlink("/Users/dolanm/Google Drive/SplitGAL4_Paper/Figures/FigureS5", here())
 ```
 
-Plot images of the IPS, GNG (part of SEZ) and the LAL (lateral accessory lobe/posterior antennal lobe), which are the main input dendritic zones for non-canonical LH input 
+Plot images of the PLP, GNG (part of SEZ) and the LAL (lateral accessory lobe/posterior antennal lobe), which are the main input dendritic zones for non-canonical LH input 
 ```{r, echo=FALSE}
 clear3d()
 LHmask<-subset(FCWBNP.surf, "LH_L")
 LHmask.jfrc2013<-xform_brain(x=LHmask, sample = FCWB, reference = JFRC2013)
-npmask<-subset(FCWBNP.surf, "LAL_L")
+npmask<-subset(FCWBNP.surf, "AVLP_L")
 npmask.jfrc2013<-xform_brain(x=npmask, sample = FCWB, reference = JFRC2013)
-plot3d(npmask.jfrc2013, alpha=0.2, col="cyan")
+plot3d(npmask.jfrc2013, alpha=0.2, col="green")
 plot3d(LHmask.jfrc2013, alpha=0.2, col="red")
 plot3d(JFRC2013, alpha=0.15)
 set3d("front", 0.7, zoom = 0.8) #Function that sets the angle and zoom 
-snapshot3d("Figure5/LAL.png")
+snapshot3d("Figure5/AVLP.png")
 ```
 
 Load up the LHON dendrite x PN axon overlap data and plot it for the supplementary figure S5. Need to edit the matrix to remove some unclear glomeruli
@@ -99,6 +99,17 @@ aheatmap(x = LHIN_all, filename=paste0("Figure5/LHON_LHIN_PN.pdf")
 
 Identify LH regions that are olfactory priviliged or multimodal 
 ```{r, echo=FALSE}
-
-
 ```
+
+For supplementary, plot heatmaps of the LHLN and PNs
+```{r, echo=FALSE}
+LHLNs_PNs<-readin(file = "FigureS5/Local_memb_x_Mask_PN_PN.txt")
+aheatmap(x = LHLNs_PNs, filename=paste0("FigureS5/LHLNs_PNs.pdf")
+         ,fontsize = 10, cexRow = 0.5, cexCol =5,  treeheight = 8, Colv = FALSE)
+```
+
+
+```{r, echo=FALSE}
+```
+
+
