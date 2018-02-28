@@ -1,0 +1,69 @@
+---
+title: "Figure6"
+author: "Mike"
+---
+#Figure6 Plotting 
+Code to plot the MBON and DAN heatmaps, for both Figure6A/B and the supplementary information
+
+First load up the required libraries and functions
+```{r, echo=FALSE, results="hide"}
+library(here)
+library(dplyr)
+library(xlsx)
+library(NMF)                # aheatmap()
+library(ggplot2)
+readin<-function(file) {
+  as.matrix(read.table(file, header=TRUE,row.names=1))
+}
+here()
+file.symlink("/Users/dolanm/Google Drive/SplitGAL4_Paper/Figures/Figure6", here())
+```
+
+Load and plot the overlap analysis of LHON axons and MBON Axons  
+```{r, echo=FALSE}
+LHON_MBON<-readin(file = "Figure6/Output_axonmemb_x_MBON_axon.txt")
+aheatmap(x = LHON_MBON, filename=paste0("Figure6/LHON_MBON.pdf")
+         ,fontsize = 10, cexRow = 3, cexCol = 0.65, treeheight = 12, Colv = FALSE)
+```
+
+Load and plot the overlap analysis of LHON axons and DAN dendrites 
+```{r, echo=FALSE}
+LHON_DAN<-readin(file = "Figure6/Output_axonmemb_x_DAN_den.txt")
+aheatmap(x = LHON_DAN, filename=paste0("Figure6/LHON_DAN.pdf")
+         ,fontsize = 10, cexRow = 3, cexCol = 0.65, treeheight = 12, Colv = FALSE)
+```
+
+For the supplementary information, plot heatmaps of the MBON axons versus LHON dendrites 
+```{r, echo=FALSE}
+LHONden_MBON<-readin(file = "Figure6/Output_den_x_MBON_axon.txt")
+aheatmap(x = LHONden_MBON, filename=paste0("Figure6/LHONden_MBON.pdf")
+         ,fontsize = 10, cexRow = 3, cexCol = 0.65, treeheight = 12, Colv = FALSE)
+```
+
+For the supplementary information, plot heatmaps of the MBON axons versus LHLNs
+```{r, echo=FALSE}
+LHLN_MBON<-readin(file = "Figure6/Local_memb_x_MBON_axon.txt")
+aheatmap(x = LHLN_MBON, filename=paste0("Figure6/LHLN_MBON.pdf")
+         ,fontsize = 10, cexRow = 0.8, cexCol = 0.65, treeheight = 12, Colv = FALSE)
+```
+
+For the supplementary information, plot heatmaps of the MBON axons versus the LHINs 
+```{r, echo=FALSE}
+
+
+```
+
+```{r, echo=FALSE}
+
+
+```
+
+```{r, echo=FALSE}
+
+
+```
+
+
+
+
+

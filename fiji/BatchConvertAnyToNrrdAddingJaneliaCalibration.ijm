@@ -86,7 +86,7 @@ function processFiles(dir,outputDir) {
 
 function processFile(dir,outputDir,file) {
 	lfile=toLowerCase(file);
-	if (!endsWith(lfile, ".nrrd")) {
+	if (!endsWith(lfile, ".nrrd") && !endsWith(lfile, ".lock")) {
 		path = dir+file;
 		outfile=substring(file,0,lastIndexOf(file,"."))+'.nrrd';
 		outpath=outputDir+outfile;

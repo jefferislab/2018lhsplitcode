@@ -1,0 +1,113 @@
+---
+title: "Figure1_EM"
+author: "Mike"
+---
+For plotting single traced neurons to illustrate their polarity. Also the code used to make Figure 1A and Figure S1.
+
+Load up the required packages, functions and the symlink to Google Drive 
+```{r, echo=FALSE, results="hide"}
+library(here)
+library(dplyr)
+library(nat)
+library(elmr)
+library(catmaid)
+library(nat.templatebrains)
+library(nat.flybrains)
+download_jefferislab_registrations()
+set3d <- function(pos = c("front", "left", "back", "right",
+                          "ventral", "dorsal"), zoom = 0.7, ...) {
+  pos <- match.arg(pos)
+  m <- diag(c(1, -1, -1, 1)) # front
+  if (pos == "left") {
+    m <- diag(c(0, -1, 0, 1))
+    m[1, 3] <- 1
+    m[3, 1] <- 1
+  }
+  if (pos == "back") {
+    m <- diag(c(-1, -1, 1, 1))
+  }
+  if (pos == "right") {
+    m <- diag(c(0, -1, 0, 1))
+    m[1, 3] <- m[3, 1] <- -1
+  }
+  if (pos == "ventral") {
+    m <- diag(c(1, -1, -1, 1))
+  }
+  if (pos == "dorsal") {
+    m <- diag(c(1, 1, 1, 1))
+  }
+  4
+  view3d(userMatrix = m, zoom = zoom, ...)
+}
+here()
+file.symlink("/Users/dolanm/Google Drive/SplitGAL4_Paper/Figures/Figure1", here())
+
+```
+
+Load up the data and examine which tracings are available
+```{r, echo=FALSE}
+emmatches_JFRC2013<-readRDS("Figure1/emmatches_JFRC2013.rds")
+celltypes<-select(emmatches_JFRC2013[,],cell.type, Miketype)
+celltypes<-mutate(celltypes, index=1:nrow(celltypes))
+celltypes
+```
+
+Create LH masks in JFRC2013 space
+```{r, echo=FALSE}
+npmask<-subset(FCWBNP.surf, "LH_L")
+npmask.jfrc2013<-xform_brain(x=npmask, sample = FCWB, reference = JFRC2013)
+```
+
+List and plot the neurons we are interested in showing as an inset to support the LM polarity data
+```{r, echo=FALSE}
+Cells2Plot<-c("3A", "116A", "70C")
+for(i in 1:length(Cells2Plot)){
+    cell<-Cells2Plot[i]
+    index<-filter(celltypes, Miketype==cell)$index
+    clear3d()
+    plot3d(emmatches_JFRC2013[[index]], WithConnectors = FALSE, WithNodes = FALSE
+           , lwd=2, col="black", soma=TRUE)
+    plot3d(npmask.jfrc2013, alpha=0.2)
+    #Add the custom, bigger connectors (plot3d's representations are too small)
+    synapses<-connectors(emmatches_JFRC2013[[index]])
+    presynapses<-filter(synapses, prepost==0)
+    postsynapses<-filter(synapses, prepost==1)
+    spheres3d(xyzmatrix(presynapses), col="red", radius = 1)
+    spheres3d(xyzmatrix(postsynapses), col="cyan", radius = 1)
+    #plot3d(JFRC2013, alpha=0.1)
+    set3d("front", 0.7, zoom = 0.7) #Function that sets the angle and zoom 
+    snapshot3d(paste0("Figure1/", cell, ".png"))
+}
+```
+
+To make Figure 1A
+```{r, echo=FALSE}
+#Sort out the masks
+LHmask<-subset(FCWBNP.surf, "LH_L")
+LHmask.jfrc2<-xform_brain(x=LHmask, sample = FCWB, reference = JFRC2)
+CAmask<-subset(FCWBNP.surf, "MB_CA_L")
+CAmask.jfrc2<-xform_brain(x=CAmask, sample = FCWB, reference = JFRC2)
+ALmask<-subset(FCWBNP.surf, "AL_L")
+ALmask.jfrc2<-xform_brain(x=ALmask, sample = FCWB, reference = JFRC2)
+DA1.jfrc2<-readRDS("Figure1/da1.jfrc2.rds")
+DA1.jfrc2<-mirror_brain(DA1.jfrc2, brain=JFRC2, mirrorAxis = "X", transform = "warp")
+clear3d()
+plot3d(JFRC2, alpha=0.2)
+plot3d(LHmask.jfrc2, alpha=0.2)
+plot3d(CAmask.jfrc2, alpha=0.2, col="green")
+plot3d(ALmask.jfrc2, alpha=0.2)
+plot3d(DA1.jfrc2, lwd=4, col="black")
+set3d("front", 0.7, zoom = 0.8) #Function that sets the angle and zoom 
+snapshot3d("Figure1/F1A.png")
+```
+
+Code to make a projection of all the tracings for the supplementary information Figure S1
+```{r, echo=FALSE}
+file.symlink("/Users/dolanm/Google Drive/SplitGAL4_Paper/Figures/FigureS1", here())
+clear3d()
+plot3d(emmatches_JFRC2013, lwd=2, soma=T)
+plot3d(JFRC2013, alpha=0.1)
+set3d("front", 0.7, zoom = 0.8) #Function that sets the angle and zoom 
+snapshot3d("FigureS1/allEMtracings.png")
+
+```

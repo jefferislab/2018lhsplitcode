@@ -1,0 +1,81 @@
+---
+title: "Figure4"
+author: "Mike"
+---
+#For plotting Figure S4
+Load up the required functions and libraries 
+```{r, echo=FALSE, results="hide"}
+library(here)
+library(dplyr)
+library(ggplot2)
+library(reshape2)
+library(NMF)                # aheatmap()
+library(nat)
+library(elmr)
+library(nat.templatebrains)
+library(nat.flybrains)
+download_jefferislab_registrations()
+readin<-function(file) {
+  as.matrix(read.table(file, header=TRUE,row.names=1))
+} #For reading in the text files containing LM overlap data 
+set3d <- function(pos = c("front", "left", "back", "right",
+                          "ventral", "dorsal"), zoom = 0.7, ...) {
+  pos <- match.arg(pos)
+  m <- diag(c(1, -1, -1, 1)) # front
+  if (pos == "left") {
+    m <- diag(c(0, -1, 0, 1))
+    m[1, 3] <- 1
+    m[3, 1] <- 1
+  }
+  if (pos == "back") {
+    m <- diag(c(-1, -1, 1, 1))
+  }
+  if (pos == "right") {
+    m <- diag(c(0, -1, 0, 1))
+    m[1, 3] <- m[3, 1] <- -1
+  }
+  if (pos == "ventral") {
+    m <- diag(c(1, -1, -1, 1))
+  }
+  if (pos == "dorsal") {
+    m <- diag(c(1, 1, 1, 1))
+  }
+  4
+  view3d(userMatrix = m, zoom = zoom, ...)
+}
+here()
+file.symlink("/Users/dolanm/Google Drive/SplitGAL4_Paper/Figures/FigureS4", here())
+```
+
+Plot the overlap matrix of LHON axons by neuropil regions as a heatmap 
+```{r, echo=FALSE}
+LHON_neuropil<-readin("FigureS4/Output_axonmemb_x_nc82_nc82.txt")
+aheatmap(x = LHON_neuropil, filename=paste0("FigureS4/LHON_neuropil.pdf")
+       , fontsize = 12, Colv = FALSE,  cexRow = 2, cexCol = 5, treeheight = 10)
+```
+Determine if there is a correlation between axon overlap and dendrite overlap 
+```{r, echo=FALSE}
+LHONaxon<-melt(readin("FigureS4/Output_axonmemb_x_Output_axonmemb.txt"))
+LHONden<-melt(readin("FigureS4/Output_den_x_Output_den.txt"))
+LHONaxon$Combo<-paste0(LHONaxon$Var1, LHONaxon$Var2)
+LHONaxon<-select(LHONaxon, Combo, value)
+LHONden$Combo<-paste0(LHONden$Var1, LHONden$Var2)
+LHONden<-select(LHONden, Combo, value)
+#Merge the two dfs into one and remove the 100% match for each cell-type onto itself 
+names(LHONden)<-c("Combo", "den_value")
+names(LHONaxon)<-c("Combo", "axon_value")
+LHONfull<-merge(x = LHONaxon, y=LHONden, by = "Combo")
+LHONfull<-filter(LHONfull, axon_value!=100 | den_value!=100)
+#Run a regression
+fit <- lm(formula = axon_value~den_value, data = LHONfull)
+summary(fit)
+#Plot of the data with regression line 
+g<-ggplot(data = LHONfull, mapping = aes(x=axon_value, y=den_value))
+g<-g+geom_point(alpha=0.1)
+g<-g+geom_smooth(method='lm', formula = y ~ x)
+g<-g+xlab("LHON axonal overlap %")
+g<-g+ylab("LHON dendritic overlap %")
+g
+ggsave(filename = "FigureS4/LHONaxon_LHONden_corr.pdf")
+
+```

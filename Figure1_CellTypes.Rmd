@@ -1,0 +1,85 @@
+---
+title: "Code For Figure 1_CellTypes"
+author: "Mike Dolan"
+output: html_document
+---
+This is the code for figure 1. All PDFs are sent to SplitGAL4_Paper/Figures/Figure1. 
+
+Load up the required packages and link to Google Drive 
+```{r, echo=FALSE, results="hide"}
+library(here) #Sets the root directory, use here() to call it 
+library(ggplot2)
+library(xlsx)
+library(dplyr)
+here()
+file.symlink("/Users/dolanm/Google Drive/SplitGAL4_Paper/Figures/Figure1", here())
+```
+
+Load in the data from the NA_master file and plot the number of cell-types covered by good or ideal lines
+```{r, echo=FALSE}
+TypeFreq<-read.xlsx("Figure1/Neuroanatomy_Master.xlsx",1)
+TypeFreq<-select(TypeFreq, 1:3)
+TypeFreq[is.na(TypeFreq)]<-0
+TypeFreq<-mutate(TypeFreq, NAgood=NAgood+Ideal)
+totalclust<-length(TypeFreq[,1])
+Totals<-rbind(totalclust-length(filter(TypeFreq, NAgood==0)[,1]), totalclust - length(filter(TypeFreq, Ideal==0)[,1]))
+```
+
+Plot the Cell-Type coverage
+```{r, echo=FALSE}
+pdf(here("Figure1/CellType_coverage.pdf"), width = 2.57, height = 4.68)
+barplot(Totals, names=c("Good", "Ideal"), ylim=c(0,totalclust),ylab="Cell-Types Covered"
+        , col=c("blue", "orange"), axes=FALSE, beside=TRUE)
+axis(2, at = c(0, 20, 40, 60, 80, totalclust))
+dev.off()
+```
+
+Plot the frequency of Good and Ideal Split-GAL4 lines for each cell-type (need to change names)
+```{r, echo=FALSE}
+#Good lines
+pdf(here("Figure1/Good_coverage.pdf"), width = 9.91, height = 4.68)
+Good<-arrange(TypeFreq, TypeFreq[,2])
+barplot(height=(Good[,2]), names.arg=Good[,1], col="blue", xlab="Cell Types"
+        , ylab="Frequency", cex.names=.5, ,las=2)
+dev.off()
+#Ideal lines
+pdf(here("Figure1/Ideal_coverage.pdf"), width = 9.91, height = 4.68)
+Ideal<-arrange(TypeFreq, TypeFreq[,3])
+barplot(height=(Ideal[,3]), names.arg=Ideal[,1], col="orange", xlab="Cell Types"
+        , ylab="Frequency", cex.names=.5, las=2)
+dev.off()
+```
+
+Plot the total number lines screened and the number of line we found. 
+```{r, echo=FALSE}
+num_screened<-2444
+num_imaged<-1095
+num_annotated<-410
+num_good<-259 #Have subtracted the number of ideals 
+num_Ideal<-123
+screened<-data.frame(group=c("Total Lines Screened", "Good Lines", "Ideal Lines"),
+                     value=c(num_screened-num_good-num_Ideal, num_good, num_Ideal)) 
+
+pdf(here("Figure1/Screen_overview.pdf"), width = 3.46, height = 4.68)
+g<-ggplot(screened, aes(x="", y=value, fill=group))
+g<-g+scale_y_continuous( breaks=c(0, 500, 1000, 1500, 2000, num_screened))
+g<-g+geom_bar(width=1, stat="identity", color="black")
+g<-g+coord_cartesian(expand = FALSE)
+g<-g+labs(y="Number of Split-GAL4 lines", x="")
+g<-g+guides(fill=guide_legend(title=NULL))
+g<-g+scale_fill_manual(values=c("blue","#E69F00", "#999999" ))
+g
+dev.off()
+```
+
+Some code to do the same as above in base R plot for consistancy. 
+```{r, echo=FALSE}
+ticks<-seq(from=0, to=2000, 250)
+screened<-c(num_screened,num_imaged, num_good,num_Ideal)
+screened<-desc(screened)
+pdf(here("Figure1/Screen_Overview_base.pdf"), width = 9.91, height = 4.68)                
+barplot(screened, names=c("Total", "Imaged" , "Good", "Ideal"), xlab="Number of Split-GAL4 lines"
+        , col=c("grey", "forest green", "blue", "orange"), beside=TRUE, axes = FALSE, horiz = TRUE)
+axis(1, at = c(ticks, num_screened))
+dev.off()
+```

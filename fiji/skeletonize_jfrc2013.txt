@@ -27,6 +27,7 @@ dir=""
 outputDir=""
 outputformat="nrrd" // or pic
 useLocksAndCheckOutput = true; // by default
+threshold=0;
 
 // Set up for headless image opening
 run("Bio-Formats Macro Extensions");
@@ -37,10 +38,13 @@ setBatchMode(true);
 //print("file = "+file);
 if (file!=""){
 	arg = split(file,",");
-	if (arg.length<2 || arg.length>2) {
+	if (arg.length<2 || arg.length>3) {
 		exit();
 	}
 
+	if(arg.length==3) {
+		threshold=arg[2];
+	}
 	// ... now deal with directories
 	if(arg[0]=="" || arg[1]==""){
 		exit();
@@ -104,14 +108,21 @@ function processFiles(dir,outputDir) {
 }
 
 function processFile(dir,outputDir,file) {
+<<<<<<< HEAD
 	if (!endsWith(file, "skel.nrrd")) {
+=======
+	if (endsWith(file, "nrrd") && !endsWith(file, "skel.nrrd") && startsWith(file, "seg_whole")) {
+>>>>>>> origin/master
 		path = dir+file;
+		outfilestem=outputDir+substring(file, 0, lastIndexOf(file, ".")) + "_skel";
+		outfilepath=outfilestem + "." + outputformat;
 		if(useLocksAndCheckOutput){
 			// Check if output already exists
-			c1outpath=outputDir+substring(file,0,lengthOf(file)-4)+"_01."+outputformat;
-			if(File.exists(c1outpath)){
-				print("Skipping file: " + file + " since " + c1outpath + " already exists");
+			if(File.exists(outfilepath)){
+				print("Skipping file: " + file + " since " + outfilepath + " already exists");
 				return;
+			} else {
+				print("Processing file: " + file + " to make " + outfilepath);
 			}
 			// Check if someone is already working on this
 			lockpath=path+'.lock';
@@ -124,10 +135,10 @@ function processFile(dir,outputDir,file) {
 
 		open(path);
 		processImage();
-		outfilestem=outputDir+substring(file,0,lastIndexOf(file,"."))+"_skel";
 		setKeyDown("alt");
-		run("Nrrd ... ", "nrrd=["+outfilestem+".nrrd]");
+		run("Nrrd ... ", "nrrd=["+outfilepath+"]");
 		setKeyDown("none");
+		close();
 		close();
 		if(useLocksAndCheckOutput){
 			File.delete(lockpath);
@@ -137,8 +148,19 @@ function processFile(dir,outputDir,file) {
 
 
 function processImage() {
-  run("Properties...", "channels=1 slices=436 frames=1 unit=microns pixel_width=0.3800000 pixel_height=0.3800000 voxel_depth=0.3800000");
-  run("Scale...", "x=0.5 y=0.5 z=0.5 width=725 height=362 depth=218 interpolation=Bilinear average process");
+  run("Scale...", "x=0.5 y=0.5 z=0.5 interpolation=Bilinear average process");
+
+  thri=parseInt(threshold);
+  if(isNaN(thri)) {
+    setAutoThreshold(threshold+" dark stack");
+    run("Convert to Mask", "method="+threshold+" background=Dark black");
+  } else {
+    if(thri>0) {
+      getMinAndMax(min, max);
+      setThreshold(thri, max);
+      run("Convert to Mask", "background=Dark black");
+    }
+  }
   run("Skeletonize (2D/3D)");
 }
 
