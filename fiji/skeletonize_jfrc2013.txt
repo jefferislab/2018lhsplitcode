@@ -14,6 +14,13 @@
 
 // jefferis@gmail.com
 
+/* Run from the command line as follows
+fiji -eval '
+runMacro("/GD/LMBD/Papers/2018lhsplitcode/fiji/skeletonize_jfrc2013.txt",
+"/Volumes/Neuronaut1/LHsplits/segs/,/Volumes/Neuronaut1/LHsplits/skels_loose/");
+' -batch --headless
+*/
+
 requires("1.42k");
 file = getArgument;
 dir=""
@@ -97,7 +104,7 @@ function processFiles(dir,outputDir) {
 }
 
 function processFile(dir,outputDir,file) {
-	if (!endsWith(file, "skel.nrrd") && startsWith(file, "seg_whole")) {
+	if (!endsWith(file, "skel.nrrd")) {
 		path = dir+file;
 		if(useLocksAndCheckOutput){
 			// Check if output already exists

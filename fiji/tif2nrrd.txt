@@ -1,0 +1,63 @@
+// Tif2Nrrd
+
+/* Run from the command line as follows
+fiji -eval '
+runMacro("/GD/LMBD/Papers/2018lhsplitcode/fiji/tif2nrrd.txt",
+"/Volumes/Neuronaut1/LHsplits/segmentations/,/Volumes/Neuronaut1/LHsplits/segs/");
+' -batch --headless
+*/
+
+requires("1.33s"); 
+run("Close All");
+dir = getDirectory("Choose a stacks directory");
+outputDir = getDirectory("Choose output directory");
+setBatchMode(true);
+count = 0;
+countFiles(dir); //output dir should not be subfolder of input dir!
+print("Total files: "+count);
+n = 0;
+processFiles(dir, outputDir);
+print("finished");
+
+
+function processFiles(dir,outputDir) {
+	list = getFileList(dir);
+	//shuffle(list);
+    for (i=0; i<list.length; i++) {
+        if (endsWith(list[i], "/"))
+            processFiles(""+dir+list[i], outputDir);
+        else {
+		showProgress(n++, count);
+              processFile(dir,outputDir,list[i]);
+        }
+    }
+}
+
+
+function processFile(dir,outputDir,file) {
+		newpath = outputDir+substring(file,0,lastIndexOf(file,"."))+'.nrrd';
+		if (endsWith(file, ".tif") || endsWith(file,".TIF")) {
+			if (File.exists(newpath)==1 ) {
+				print("Nrrd already exists:" + file);
+			} else {
+				open(dir+file); //Opens the stack
+				name = getTitle();
+				setKeyDown("alt");
+				run("Nrrd ... ", "nrrd="+newpath);
+				run("Close All");
+			}
+		}
+	}
+
+
+
+
+function countFiles(dir) {
+		list = getFileList(dir);
+	for (i=0; i<list.length; i++) {
+		if (endsWith(list[i], "/"))
+            countFiles(""+dir+list[i]);
+	else
+		count++;
+	}
+}
