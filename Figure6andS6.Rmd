@@ -18,6 +18,11 @@ readin<-function(file) {
 here()
 file.symlink("/Users/dolanm/Google Drive/SplitGAL4_Paper/Figures/Figure6", here())
 ```
+Read in the MBON and LHON neurotransmitter annotations 
+```{r, echo=FALSE}
+MBONnts<-read.xlsx(file = "Figure6/MBON_NT.xlsx",sheetIndex = 1)
+
+```
 
 Load and plot the overlap analysis of LHON axons and MBON Axons  
 ```{r, echo=FALSE}
