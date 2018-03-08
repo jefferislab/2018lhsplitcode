@@ -101,7 +101,7 @@ set3d("front", 0.7, zoom = 0.8) #Function that sets the angle and zoom
 snapshot3d("Figure1/F1A.png")
 ```
 
-Code to make a projection of all the tracings for the supplementary information Figure S1
+Code to make a projection of all the tracings for the supplementary information Figure S1 and a 3A one 
 ```{r, echo=FALSE}
 file.symlink("/Users/dolanm/Google Drive/SplitGAL4_Paper/Figures/FigureS1", here())
 clear3d()
@@ -109,5 +109,10 @@ plot3d(emmatches_JFRC2013, lwd=2, soma=T)
 plot3d(JFRC2013, alpha=0.1)
 set3d("front", 0.7, zoom = 0.8) #Function that sets the angle and zoom 
 snapshot3d("FigureS1/allEMtracings.png")
-
+#Make just a projection of 3A
+clear3d()
+plot3d(emmatches_JFRC2013[[10]], lwd=2.5, soma=T)
+plot3d(JFRC2013, alpha=0.1)
+set3d("front", 0.7, zoom = 0.8) #Function that sets the angle and zoom 
+snapshot3d("FigureS1/3A_brain_tracing.png")
 ```
