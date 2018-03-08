@@ -71,7 +71,7 @@ fit <- lm(formula = axon_value~den_value, data = LHONfull)
 summary(fit)
 #Plot of the data with regression line 
 g<-ggplot(data = LHONfull, mapping = aes(x=axon_value, y=den_value))
-g<-g+geom_point(alpha=0.1)
+g<-g+geom_point(alpha=0.1, size=2)
 g<-g+geom_smooth(method='lm', formula = y ~ x)
 g<-g+xlab("LHON axonal overlap %")
 g<-g+ylab("LHON dendritic overlap %")
