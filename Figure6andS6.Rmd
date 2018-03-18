@@ -24,6 +24,7 @@ Note: Use black heatmaps so the colours aren't so overwhealming
 Note: Read in the NAmaster from dropbox for now. Will use an updated final version for the markdown
 Prelinimary code chunk to read in the NT tracks 
 ```{r, echo=FALSE}
+#Load up the revelent datafiles 
 MBONnts<-read.xlsx(file = "Figure6/MBON_NT.xlsx",sheetIndex = 1)
 LHnts<-read.xlsx(file="/Users/mjdolan/Dropbox/JFRCvisitorProject/Neuroanatomy_Master.xlsx", sheetIndex = 1)
 LHnts<-select(LHnts,LHClusters., Neurotransmitter)
@@ -34,12 +35,11 @@ LHONs<-dimnames(LHON_MBON)[[1]] #Pull in the cell-types in question and get thei
 LHONs<-data.frame(Type=LHONs)
 LHnts$LHClusters.<-paste0("CellType_", LHnts$LHClusters.) #Add CellType to all the names to match them with left_join, remove this with new naming system 
 names(LHnts)<-c("Type", "Neurotransmitter")
-
 #Now join the dimnames with the annotation::cell-types to find matches but maintain matrix order.
 #Note you just feed aheatmap the ordered annotations, not the annotation::cell-types pairs.
 #Use different columns to add more tracks 
 LHONtransmitter<-left_join(x = LHONs, y = LHnts, "Type")
-LHONtransmitter<-data.frame(Neurotransmitter=LHONtransmitter$Neurotransmitter)
+LHONtransmitter<-data.frame(Neurotransmitter=as.character(LHONtransmitter$Neurotransmitter))
 
 #Do the same for MBONs 
 MBONs<-dimnames(LHON_MBON)[[2]] #Pull in the cell-types in question and get their order 
@@ -47,7 +47,7 @@ MBONs<-data.frame(Type=MBONs)
 names(MBONnts)<-c("Type", "Neurotransmitter")
 
 MBONtransmitter<-left_join(x = MBONs, y = MBONnts, "Type")
-MBONtransmitter<-data.frame(Neurotransmitter=MBONtransmitter$Neurotransmitter)
+MBONtransmitter<-data.frame(Neurotransmitter=as.character(MBONtransmitter$Neurotransmitter))
 
 aheatmap(x = LHON_MBON, filename=paste0("NT_test.pdf")
          ,fontsize = 10, cexRow = 3, col="black",annRow = LHONtransmitter, annCol=MBONtransmitter, annColors  = "Dark2"
