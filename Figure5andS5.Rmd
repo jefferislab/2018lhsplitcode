@@ -107,6 +107,19 @@ LHLNs_PNs<-readin(file = "FigureS5/Local_memb_x_Mask_PN_PN.txt")
 aheatmap(x = LHLNs_PNs, filename=paste0("FigureS5/LHLNs_PNs.pdf")
          ,fontsize = 10, cexRow = 0.5, cexCol =5,  treeheight = 8, Colv = FALSE)
 ```
+For the supplementary information, plot heatmaps of the MBON axons versus LHON dendrites 
+```{r, echo=FALSE}
+LHONden_MBON<-readin(file = "FigureS5/Output_den_x_MBON_axon.txt")
+aheatmap(x = LHONden_MBON, filename=paste0("Figure6/LHONden_MBON.pdf")
+         ,fontsize = 10, cexRow = 3, cexCol = 0.65, treeheight = 12, Colv = FALSE)
+```
+
+For the supplementary information, plot heatmaps of the MBON axons versus LHLNs
+```{r, echo=FALSE}
+LHLN_MBON<-readin(file = "FigureS5/Local_memb_x_MBON_axon.txt")
+aheatmap(x = LHLN_MBON, filename=paste0("Figure6/LHLN_MBON.pdf")
+         ,fontsize = 10, cexRow = 0.8, cexCol = 0.65, treeheight = 12, Colv = FALSE)
+```
 
 
 ```{r, echo=FALSE}

@@ -13,6 +13,7 @@ library(elmr)
 library(catmaid)
 library(nat.templatebrains)
 library(nat.flybrains)
+library(catnat)
 download_jefferislab_registrations()
 set3d <- function(pos = c("front", "left", "back", "right",
                           "ventral", "dorsal"), zoom = 0.7, ...) {

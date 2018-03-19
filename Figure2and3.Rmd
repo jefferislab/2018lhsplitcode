@@ -46,18 +46,19 @@ file.symlink("/Users/dolanm/Google Drive/SplitGAL4_Paper/Figures/Figure2and3", h
 
 Load up the EM skeletons (in JFRC2013 space) and plot the cell-types that have a skeleton attached. Note that this dataset comes with significant metadata. Then load up a list of all the LHONs, LHLNs and LHINs (in a spreadsheet file creating during figuremaking)   
 ```{r, echo=FALSE}
-EMmatches<-readRDS(file = "Figure2/emmatches_JFRC2013.rds")
+EMmatches<-readRDS(file = "Figure2and3/emmatches_JFRC2013.rds")
 celltypes<-data.frame(EMmatches[, c(1,3)], 1:nrow(EMmatches[,]))
 names(celltypes)<-c("celltype", "Miketype", "index")
-LHONs<-read.xlsx(file = "Figure2and3/Figure2and3_supp_info.xlsx", sheetIndex = 1)[,1:2]
-
+LHONs<-as.character(read.xlsx(file = "Figure2and3/Figure2and3_supp_info.xlsx", sheetIndex = 1,)[,1])
+LHLNs<-as.character(read.xlsx(file = "Figure2and3/Figure2and3_supp_info.xlsx", sheetIndex = 2,)[,1])
+LHINs<-as.character(read.xlsx(file = "Figure2and3/Figure2and3_supp_info.xlsx", sheetIndex = 3,)[,1])
 ```
 
-For each cell-type listed as an LHON, plot the corresponding skeleton and save to the figure directory 
+For each cell-type listed as an LHON, LHIN or LHLN, plot the corresponding skeleton and save to the figure directory 
 ```{r, echo=FALSE}
 npmask<-subset(FCWBNP.surf, "LH_L")
 npmask.jfrc2013<-xform_brain(x=npmask, sample = FCWB, reference = JFRC2013)
-Cells2Plot<-LHONs$Cell.Type..old.name.
+Cells2Plot<-c(LHONs, LHINs, LHLNs)
 for(i in 1:length(Cells2Plot)){
     cell<-Cells2Plot[i]
     index<-filter(celltypes, Miketype==cell)$index
@@ -68,6 +69,9 @@ for(i in 1:length(Cells2Plot)){
     plot3d(npmask.jfrc2013, alpha=0.2)
     #plot3d(JFRC2013, alpha=0.1)
     set3d("front", 0.7, zoom = 0.8) #Function that sets the angle and zoom 
-    snapshot3d(paste0("Figure2/", cell, ".png"))
+    snapshot3d(paste0("Figure2and3/", cell, ".png"))
 }
 ```
+
+
+
