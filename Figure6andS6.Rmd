@@ -25,6 +25,7 @@ Note: Read in the NAmaster from dropbox for now. Will use an updated final versi
 Prelinimary code chunk to read in the NT tracks 
 ```{r, echo=FALSE}
 #Load up the revelent datafiles 
+LHON_MBON<-readin(file = "Figure6/Output_axonmemb_x_MBON_axon.txt")
 MBONnts<-read.xlsx(file = "Figure6/MBON_NT.xlsx",sheetIndex = 1)
 LHnts<-read.xlsx(file="/Users/mjdolan/Dropbox/JFRCvisitorProject/Neuroanatomy_Master.xlsx", sheetIndex = 1)
 LHnts<-select(LHnts,LHClusters., Neurotransmitter)
@@ -53,17 +54,11 @@ MBONtransmitter<-data.frame(Neurotransmitter=as.character(MBONtransmitter$Neurot
 transmitter_col<-c("red", "dodgerblue", "forestgreen", "dark magenta", "gold")
 names(transmitter_col)<-c("Acetylcholine", "GABA", "Glutamate", "Acetylcholine, GABA",  "Acetylcholine, Glutamate" )
 
-aheatmap(x = LHON_MBON, filename=paste0("NT_test.pdf")
+aheatmap(x = LHON_MBON, filename=paste0("Figure6/LHON_MBON.pdf")
          ,fontsize = 10, cexRow = 3, col="black",annRow = LHONtransmitter, annCol=MBONtransmitter, annColors  = list(transmitter_col), cexCol = 0.65, treeheight = 12, Colv = FALSE)
 
 ```
 
-Load and plot the overlap analysis of LHON axons and MBON Axons  
-```{r, echo=FALSE}
-LHON_MBON<-readin(file = "Figure6/Output_axonmemb_x_MBON_axon.txt")
-aheatmap(x = LHON_MBON, filename=paste0("Figure6/LHON_MBON.pdf")
-         ,fontsize = 10, cexRow = 3, cexCol = 0.65, treeheight = 12, Colv = FALSE)
-```
 
 Load and plot the overlap analysis of LHON axons and DAN dendrites 
 ```{r, echo=FALSE}
