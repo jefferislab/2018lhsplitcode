@@ -49,9 +49,12 @@ names(MBONnts)<-c("Type", "Neurotransmitter")
 MBONtransmitter<-left_join(x = MBONs, y = MBONnts, "Type")
 MBONtransmitter<-data.frame(Neurotransmitter=as.character(MBONtransmitter$Neurotransmitter))
 
+#Define the colours for annotations 
+transmitter_col<-c("red", "cyan", "green", "magenta", "yellow")
+names(transmitter_col)<-c("Acetylcholine", "GABA", "Glutamate", "Acetylcholine, GABA",  "Acetylcholine, Glutamate" )
+
 aheatmap(x = LHON_MBON, filename=paste0("NT_test.pdf")
-         ,fontsize = 10, cexRow = 3, col="black",annRow = LHONtransmitter, annCol=MBONtransmitter, annColors  = "Dark2"
-         ,cexCol = 0.65, treeheight = 12, Colv = FALSE)
+         ,fontsize = 10, cexRow = 3, col="black",annRow = LHONtransmitter, annCol=MBONtransmitter, annColors  = list(transmitter_col), cexCol = 0.65, treeheight = 12, Colv = FALSE)
 
 ```
 
