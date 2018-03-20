@@ -60,7 +60,6 @@ aheatmap(x = LHON_MBON, filename=paste0("Figure6/LHON_MBON.pdf")
 
 ```
 
-
 Load and plot the overlap analysis of LHON axons and DAN dendrites 
 ```{r, echo=FALSE}
 LHON_DAN<-readin(file = "Figure6/Output_axonmemb_x_DAN_den.txt")
@@ -73,11 +72,6 @@ aheatmap(x = LHON_DAN, filename=paste0("Figure6/LHON_DAN.pdf")
 
 
 For the supplementary information, plot heatmaps of the MBON axons versus the LHINs 
-```{r, echo=FALSE}
-
-
-```
-
 ```{r, echo=FALSE}
 
 

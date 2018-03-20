@@ -89,11 +89,59 @@ set3d("front", 0.7, zoom = 0.8) #Function that sets the angle and zoom
 snapshot3d("Figure4/SMP.png")
 ```
 
-Pull up the NTs for LHONs and LHLNs, using the standard colourscheme 
+Pull up the NTs for LHONs
 ```{r, echo=FALSE}
-LHON_LHLN<-readin("Figure4/Local_memb_x_Output_den.txt")
+LHON_LHONs<-readin("Figure4/Output_axonmemb_x_Output_axonmemb.txt")
 LHnts<-read.xlsx(file="/Users/dolanm/Dropbox/JFRCvisitorProject/Neuroanatomy_Master.xlsx", sheetIndex = 1)
 LHnts<-select(LHnts,LHClusters., Neurotransmitter)
+#For LHONs 
+LHONs<-dimnames(LHON_LHONs)[[1]] #Pull in the cell-types in question and get their order 
+LHONs<-data.frame(Type=LHONs)
+LHnts$LHClusters.<-paste0("CellType_", LHnts$LHClusters.) #Add CellType to all the names to match them with left_join, remove this 
+names(LHnts)<-c("Type", "Neurotransmitter")
+LHONtransmitter<-left_join(x = LHONs, y = LHnts, "Type")
+LHONtransmitter<-data.frame(Neurotransmitter=as.character(LHONtransmitter$Neurotransmitter))
+
+#Define the colours for annotations 
+transmitter_col<-c("red", "dodgerblue", "forestgreen", "dark magenta", "gold", "grey")
+names(transmitter_col)<-c("Acetylcholine", "GABA", "Glutamate", "Acetylcholine, GABA",  "Acetylcholine, Glutamate", "GABA, Dopamine" )
+```
+
+Calculate the major neuropil output zone as a track for the LHONxLHON heatmap. This is an optional add-on, I didn't like the way it looked
+```{r, echo=FALSE}
+LHON_nc82<-readin(file = "FigureS4/Output_axonmemb_x_nc82_nc82.txt")
+main_np<-data.frame(Type=dimnames(LHON_nc82)[[1]], main_np=NA)
+for(i in 1:nrow(LHON_nc82)) {
+  type<-row.names(LHON_nc82)[i]
+  row<-LHON_nc82[i,]
+  row<-data.frame(neuropil=names(row), values=row)
+  main_np[i,2]<-as.character(row[which.max(row$values), ]$neuropil)
+  } #Calculate the max neuropil for each cell-type 
+LHON_np<-data.frame(Output=main_np$main_np)
+
+
+```
+
+For plotting the overlap analysis of LHONs by LHONs, with modified matrix presentation and NT information. Note remove the 29A modification when I rerun everything with the final dataset
+```{r, echo=FALSE}
+LHON_LHON<-readin("Figure4/Output_axonmemb_x_Output_axonmemb.txt")
+diag(LHON_LHON)<--1
+
+#LHON_LHON<-subset(LHON_LHON, colnames(LHON_LHON)!="CellType_29A")
+#LHON_LHON<-LHON_LHON[,-23]
+aheatmap(x = LHON_LHON, filename=paste0("Figure4/LHON_LHON.pdf")
+         ,fontsize = 9, col="black", cexRow = 1, cexCol = 1, Rowv = FALSE, treeheight = 15 
+         ,annRow = LHONtransmitter, annCol = LHONtransmitter
+         ,annColors = list(transmitter_col), annLegend = FALSE)
+```
+
+For plotting the overlap analysis of LHON dendrites and local LH neurons with NT annotation tracks 
+```{r, echo=FALSE}
+LHON_LHLN<-readin("Figure4/Local_memb_x_Output_den.txt")
+#Redefine the colours for annotations 
+transmitter_col<-c("red", "dodgerblue", "forestgreen", "dark magenta", "gold", "grey")
+names(transmitter_col)<-c("Acetylcholine", "GABA", "Glutamate", "Acetylcholine, GABA",  "Acetylcholine, Glutamate", "GABA, Dopamine" )
+
 #For LHONs 
 LHONs<-dimnames(LHON_LHLN)[[2]] #Pull in the cell-types in question and get their order 
 LHONs<-data.frame(Type=LHONs)
@@ -108,27 +156,8 @@ LHLNs<-data.frame(Type=LHLNs)
 LHLNtransmitter<-left_join(x = LHLNs, y = LHnts, "Type")
 LHLNtransmitter<-data.frame(Neurotransmitter=as.character(LHLNtransmitter$Neurotransmitter))
 
-#Define the colours for annotations 
-transmitter_col<-c("red", "dodgerblue", "forestgreen", "dark magenta", "gold", "grey")
-names(transmitter_col)<-c("Acetylcholine", "GABA", "Glutamate", "Acetylcholine, GABA",  "Acetylcholine, Glutamate", "GABA, Dopamine" )
-```
-
-For plotting the overlap analysis of LHON dendrites and local LH neurons  
-```{r, echo=FALSE}
 aheatmap(x = LHON_LHLN, filename="Figure4/LHON_LHLN.pdf"
          ,fontsize = 9, cexRow = 2, cexCol = 5.3, treeheight = 10, col="black"
          ,annRow = LHLNtransmitter, annCol = LHONtransmitter, annColors = list(transmitter_col), annLegend = FALSE)
-```
-
-For plotting the overlap analysis of LHONs by LHONs, with modified matrix presentation and NT information. Note remove the 29A modification when I rerun everything with the final dataset
-```{r, echo=FALSE}
-LHON_LHON<-readin("Figure4/Output_axonmemb_x_Output_axonmemb.txt")
-diag(LHON_LHON)<--1
-
-#LHON_LHON<-subset(LHON_LHON, colnames(LHON_LHON)!="CellType_29A")
-#LHON_LHON<-LHON_LHON[,-23]
-aheatmap(x = LHON_LHON, filename=paste0("Figure4/LHON_LHON.pdf")
-         ,fontsize = 9, col="black", cexRow = 1, cexCol = 1, Rowv = FALSE, treeheight = 15 
-         ,annRow = LHONtransmitter, annCol = LHONtransmitter, annColors = list(transmitter_col),annLegend = FALSE)
 ```
 
