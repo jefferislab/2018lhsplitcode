@@ -59,15 +59,14 @@ npmask<-subset(FCWBNP.surf, "LH_L")
 npmask.jfrc2013<-xform_brain(x=npmask, sample = FCWB, reference = JFRC2013)
 ```
 
-List and plot the neurons we are interested in showing as an inset to support the LM polarity data
+List and plot the neurons we are interested in showing as an inset to support the LM polarity data. Use flow centrality to estimate pre and post-synapse 
 ```{r, echo=FALSE}
 Cells2Plot<-c("3A", "116A", "70C")
 for(i in 1:length(Cells2Plot)){
     cell<-Cells2Plot[i]
     index<-filter(celltypes, Miketype==cell)$index
     clear3d()
-    plot3d(emmatches_JFRC2013[[index]], WithConnectors = FALSE, WithNodes = FALSE
-           , lwd=2, col="black", soma=TRUE)
+    plot3d(emmatches_JFRC2013[[index]], WithConnectors = FALSE, WithNodes = FALSE, lwd=4, col="black", soma=TRUE)
     plot3d(npmask.jfrc2013, alpha=0.2)
     #Add the custom, bigger connectors (plot3d's representations are too small)
     synapses<-connectors(emmatches_JFRC2013[[index]])
@@ -75,6 +74,8 @@ for(i in 1:length(Cells2Plot)){
     postsynapses<-filter(synapses, prepost==1)
     spheres3d(xyzmatrix(presynapses), col="red", radius = 1.4)
     spheres3d(xyzmatrix(postsynapses), col="cyan", radius = 0.70)
+    #a = flow.centrality(emmatches_JFRC2013[[index]],polypre=FALSE)
+    #seesplit3d(a, soma=1, lwd=4, WithConnectors = F)
     #plot3d(JFRC2013, alpha=0.1)
     set3d("front", 0.7, zoom = 0.7) #Function that sets the angle and zoom 
     snapshot3d(paste0("Figure1/", cell, ".png"))
