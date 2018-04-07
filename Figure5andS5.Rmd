@@ -86,7 +86,7 @@ Next want to remove unwanted/unclear cell-types from the input designation and a
 #write.xlsx(x = dimnames(LHON_input)[[2]], file = "Figure5/LHON_Input_tracks.xlsx")
 modality<-read.xlsx(file = "Figure5/LHON_Input_tracks.xlsx", sheetIndex = 1)
 aheatmap(x = LHON_input, filename=paste0("Figure5/LHON_input.pdf")
-         , annCol  = modality$Modality, annColors = "rainbow", annLegend = FALSE
+         , annCol  = modality$Modality, col="black", annColors = "rainbow", annLegend = FALSE
          ,fontsize = 10, cexRow = 2, cexCol = 0.6, Colv = FALSE, treeheight = 8)
 ```
 
@@ -95,10 +95,6 @@ Combine all the LH input (PN, TPN, Visual, Taste etc) to identify LHONs that int
 LHIN_all<-cbind(LHON_PN, LHON_LHIN)
 aheatmap(x = LHIN_all, filename=paste0("Figure5/LHON_LHIN_PN.pdf")
          ,fontsize = 10, cexRow = 2, cexCol = 0.6,  treeheight = 8)
-```
-
-Identify LH regions that are olfactory priviliged or multimodal 
-```{r, echo=FALSE}
 ```
 
 For supplementary, plot heatmaps of the LHLN and PNs
