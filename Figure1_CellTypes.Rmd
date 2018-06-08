@@ -55,10 +55,9 @@ TypeFreq_Plot$NAgood<-TypeFreq_Plot$NAgood+TypeFreq_Plot$Ideal #Add these to cre
 TypeFreq_Plot<-filter(TypeFreq, NAgood!=0)
 TypeFreq_Plot<-arrange(TypeFreq_Plot, desc(TypeFreq_Plot[,2]), desc(TypeFreq_Plot[,3]))
 
-barplot(height=(TypeFreq_Plot[,2]), names.arg=TypeFreq_Plot[,1], col="blue", xlab="Frequency"
-        , ylab="Cell-Types", cex.names=.7, las=2, horiz = F, space=0.4, mgp=c(3,0.3,0))
-barplot(height=(TypeFreq_Plot[,3]), names.arg=TypeFreq_Plot[,1], col="orange", xlab="Frequency"
-        , ylab="Cell-Types", cex.names=.7, las=2, add=TRUE, horiz = F, space=0.4, mgp=c(3,0.3,0))
+barplot(height=(TypeFreq_Plot[,2]), names.arg=TypeFreq_Plot[,1], col="blue", xlab="Cell-Types"
+        , ylab="Frequency", cex.names=.7, las=2, horiz = F, space=0.4, mgp=c(1.8,0.6,0))
+barplot(height=(TypeFreq_Plot[,3]), col="orange", cex.names=.7, las=2, add=TRUE, horiz = F, space=0.4, mgp=c(1.8,0.6,0))
 dev.off()
 
 ```
