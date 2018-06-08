@@ -28,9 +28,10 @@ Totals<-rbind(totalclust-length(filter(TypeFreq, NAgood==0)[,1]), totalclust - l
 Plot the Cell-Type coverage
 ```{r, echo=FALSE}
 pdf(here("Figure1/CellType_coverage.pdf"), width = 2.57, height = 4.68)
-barplot(Totals, names=c("Good", "Ideal"), ylim=c(0,totalclust),ylab="Cell-Types Covered"
-        , col=c("blue", "orange"), axes=FALSE, beside=TRUE)
+barplot(Totals, names=c("Good", "Ideal"), ylim=c(0,totalclust), ylab="Cell-Types Covered"
+        , col=c("blue", "orange"), axes=FALSE, beside=TRUE,  cex.lab=1.5, cex.names=1.2)
 axis(2, at = c(0, 20, 40, 60, 80, totalclust))
+
 dev.off()
 ```
 
@@ -38,7 +39,7 @@ Plot the frequency of Good and Ideal Split-GAL4 lines for each cell-type (need t
 ```{r, echo=FALSE}
 #Good lines
 pdf(here("Figure1/Good_coverage.pdf"), width = 9.91, height = 4.68)
-Good<-arrange(TypeFreq, TypeFreq[,2])
+Good<-arrange(TypeFreq, desc(TypeFreq[,2]))
 barplot(height=(Good[,2]), names.arg=Good[,1], col="blue", xlab="Cell Types"
         , ylab="Frequency", cex.names=.5, ,las=2)
 dev.off()
@@ -48,6 +49,18 @@ Ideal<-arrange(TypeFreq, TypeFreq[,3])
 barplot(height=(Ideal[,3]), names.arg=Ideal[,1], col="orange", xlab="Cell Types"
         , ylab="Frequency", cex.names=.5, las=2)
 dev.off()
+
+pdf(here("Figure1/IdealandGood_coverage.pdf"), width = 10, height = 6)
+TypeFreq_Plot$NAgood<-TypeFreq_Plot$NAgood+TypeFreq_Plot$Ideal #Add these to create the final boxplot
+TypeFreq_Plot<-filter(TypeFreq, NAgood!=0)
+TypeFreq_Plot<-arrange(TypeFreq_Plot, desc(TypeFreq_Plot[,2]), desc(TypeFreq_Plot[,3]))
+
+barplot(height=(TypeFreq_Plot[,2]), names.arg=TypeFreq_Plot[,1], col="blue", xlab="Frequency"
+        , ylab="Cell-Types", cex.names=.7, las=2, horiz = F, space=0.4, mgp=c(3,0.3,0))
+barplot(height=(TypeFreq_Plot[,3]), names.arg=TypeFreq_Plot[,1], col="orange", xlab="Frequency"
+        , ylab="Cell-Types", cex.names=.7, las=2, add=TRUE, horiz = F, space=0.4, mgp=c(3,0.3,0))
+dev.off()
+
 ```
 
 Plot the total number lines screened and the number of line we found. 
@@ -79,7 +92,8 @@ screened<-c(num_screened,num_imaged, num_good,num_Ideal)
 screened<-desc(screened)
 pdf(here("Figure1/Screen_Overview_base.pdf"), width = 9.91, height = 4.68)                
 barplot(screened, names=c("Total", "Imaged" , "Good", "Ideal"), xlab="Number of Split-GAL4 lines"
-        , col=c("grey", "forest green", "blue", "orange"), beside=TRUE, axes = FALSE, horiz = TRUE)
+        , col=c("grey", "forest green", "blue", "orange"), beside=TRUE, axes = FALSE, horiz = TRUE
+        , cex.names=1.2)
 axis(1, at = c(ticks, num_screened))
 dev.off()
 ```
