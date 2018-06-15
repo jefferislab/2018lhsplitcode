@@ -41,11 +41,10 @@ pdf(here("Figure1/IdealandGood_coverage.pdf"), width = 10, height = 6)
 TypeFreq_Plot<-filter(TypeFreq, NAgood!=0)
 TypeFreq_Plot<-arrange(TypeFreq_Plot, desc(TypeFreq_Plot[,2]), desc(TypeFreq_Plot[,3]))
 
-barplot(height=(TypeFreq_Plot[,2]), names.arg=TypeFreq_Plot[,1], col="blue", xlab="Cell-Types"
+barplot(height=(TypeFreq_Plot[,2]), names.arg=TypeFreq_Plot[,4], col="blue", xlab=""
         , ylab="Frequency", cex.names=.7, las=2, horiz = F, space=0.4, mgp=c(1.8,0.6,0))
 barplot(height=(TypeFreq_Plot[,3]), col="orange", cex.names=.7, las=2, add=TRUE, horiz = F, space=0.4, mgp=c(1.8,0.6,0))
 dev.off()
-
 ```
 
 Plot the total number lines screened and the number of line we found. 
