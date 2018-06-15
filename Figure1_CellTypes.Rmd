@@ -18,7 +18,7 @@ file.symlink("/Users/dolanm/Google Drive/SplitGAL4_Paper/Figures/Figure1", here(
 Load in the data from the NA_master file and plot the number of cell-types covered by good or ideal lines
 ```{r, echo=FALSE}
 TypeFreq<-read.xlsx("Figure1/Neuroanatomy_Master.xlsx",1)
-TypeFreq<-select(TypeFreq, 1:3)
+TypeFreq<-select(TypeFreq, 1:4)
 TypeFreq[is.na(TypeFreq)]<-0
 TypeFreq<-mutate(TypeFreq, NAgood=NAgood+Ideal)
 totalclust<-length(TypeFreq[,1])
@@ -37,21 +37,7 @@ dev.off()
 
 Plot the frequency of Good and Ideal Split-GAL4 lines for each cell-type (need to change names)
 ```{r, echo=FALSE}
-#Good lines
-pdf(here("Figure1/Good_coverage.pdf"), width = 9.91, height = 4.68)
-Good<-arrange(TypeFreq, desc(TypeFreq[,2]))
-barplot(height=(Good[,2]), names.arg=Good[,1], col="blue", xlab="Cell Types"
-        , ylab="Frequency", cex.names=.5, ,las=2)
-dev.off()
-#Ideal lines
-pdf(here("Figure1/Ideal_coverage.pdf"), width = 9.91, height = 4.68)
-Ideal<-arrange(TypeFreq, TypeFreq[,3])
-barplot(height=(Ideal[,3]), names.arg=Ideal[,1], col="orange", xlab="Cell Types"
-        , ylab="Frequency", cex.names=.5, las=2)
-dev.off()
-
 pdf(here("Figure1/IdealandGood_coverage.pdf"), width = 10, height = 6)
-TypeFreq_Plot$NAgood<-TypeFreq_Plot$NAgood+TypeFreq_Plot$Ideal #Add these to create the final boxplot
 TypeFreq_Plot<-filter(TypeFreq, NAgood!=0)
 TypeFreq_Plot<-arrange(TypeFreq_Plot, desc(TypeFreq_Plot[,2]), desc(TypeFreq_Plot[,3]))
 
