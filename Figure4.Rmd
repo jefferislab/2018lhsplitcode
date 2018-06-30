@@ -89,12 +89,20 @@ set3d("front", 0.7, zoom = 0.8) #Function that sets the angle and zoom
 snapshot3d("Figure4/SMP.png")
 ```
 
-Pull up the NTs for LHONs
+Pull up the new nomenclature and the NTs for LHONs
 ```{r, echo=FALSE}
 LHON_LHONs<-readin("Figure4/Output_axonmemb_x_Output_axonmemb.txt")
-LHnts<-read.xlsx(file="/Users/dolanm/Dropbox/JFRCvisitorProject/Neuroanatomy_Master.xlsx", sheetIndex = 1)
-LHnts<-select(LHnts,LHClusters., Neurotransmitter)
-#For LHONs 
+NAmaster<-read.xlsx(file="/Users/dolanm/Dropbox/JFRCvisitorProject/Neuroanatomy_Master.xlsx", sheetIndex = 1)
+LHnts<-select(NAmaster,LHClusters., Neurotransmitter)
+LHnewnames<-select(NAmaster,LHClusters., FinalNames)
+
+#To rename the LH cell-types
+oldnames<-lapply(X = dimnames(LHON_LHONs), FUN = gsub, pattern = "CellType_", replacement = "", fixed = TRUE)
+oldname1<-data.frame(oldnames=oldnames[[1]]) #For the row names
+oldname1<-merge(x=oldname1, by.x ="oldnames", y=LHnewnames, by.y = "LHClusters.", sort =FALSE)
+newname1<-as.character(oldname1$FinalNames)
+
+#For LHON neurotransmitters
 LHONs<-dimnames(LHON_LHONs)[[1]] #Pull in the cell-types in question and get their order 
 LHONs<-data.frame(Type=LHONs)
 LHnts$LHClusters.<-paste0("CellType_", LHnts$LHClusters.) #Add CellType to all the names to match them with left_join, remove this 
@@ -127,10 +135,11 @@ For plotting the overlap analysis of LHONs by LHONs, with modified matrix presen
 LHON_LHON<-readin("Figure4/Output_axonmemb_x_Output_axonmemb.txt")
 diag(LHON_LHON)<--1
 
+dimnames(LHON_LHON)<-list(newname1, newname1)
 #LHON_LHON<-subset(LHON_LHON, colnames(LHON_LHON)!="CellType_29A")
 #LHON_LHON<-LHON_LHON[,-23]
 aheatmap(x = LHON_LHON, filename=paste0("Figure4/LHON_LHON.pdf")
-         ,fontsize = 9, col="black", cexRow = 1, cexCol = 1, Rowv = FALSE, treeheight = 15 
+         ,fontsize = 9, col="black", cexRow = 1, cexCol =1, Rowv = FALSE, treeheight = 10 
          ,annRow = LHONtransmitter, annCol = LHONtransmitter
          ,annColors = list(transmitter_col), annLegend = FALSE)
 ```
@@ -156,8 +165,16 @@ LHLNs<-data.frame(Type=LHLNs)
 LHLNtransmitter<-left_join(x = LHLNs, y = LHnts, "Type")
 LHLNtransmitter<-data.frame(Neurotransmitter=as.character(LHLNtransmitter$Neurotransmitter))
 
+#Calculate the LHLN new names
+oldnames<-lapply(X = dimnames(LHON_LHLN), FUN = gsub, pattern = "CellType_", replacement = "", fixed = TRUE)
+oldname2<-data.frame(oldnames=oldnames[[1]]) #For the row names
+oldname2<-merge(x=oldname2, by.x ="oldnames", y=LHnewnames, by.y = "LHClusters.", sort =FALSE)
+newname2<-as.character(oldname2$FinalNames)
+
+dimnames(LHON_LHLN)<-list(newname2, newname1)
+#Plot the heatmap
 aheatmap(x = LHON_LHLN, filename="Figure4/LHON_LHLN.pdf"
-         ,fontsize = 9, cexRow = 2, cexCol = 5.3, treeheight = 10, col="black"
+         ,fontsize = 10, cexRow = .8, cexCol = 5.3, treeheight = 10, col="black"
          ,annRow = LHLNtransmitter, annCol = LHONtransmitter, annColors = list(transmitter_col), annLegend = FALSE)
 ```
 
