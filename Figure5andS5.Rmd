@@ -64,10 +64,10 @@ snapshot3d("Figure5/AVLP.png")
 
 Load up the LHON dendrite x PN axon overlap data and plot it for the supplementary figure S5. Need to edit the matrix to remove some unclear glomeruli
 ```{r, echo=FALSE}
-LHON_PN<-readin("Figure5/Output_den_x_Mask_PN_PN.txt")
+LHON_PN<-readin("FigureS5/Output_den_x_Mask_PN_PN.txt")
 
 aheatmap(x = LHON_PN, filename=paste0("FigureS5/LHON_PN.pdf")
-         ,fontsize = 9, cexRow = 1, cexCol = 2, Colv = FALSE, treeheight = 15)
+         ,fontsize = 9, cexRow = 1, cexCol = 2, Colv = FALSE, treeheight = 15, col="black")
 ```
 
 LH gets other inputs in addition to the projection neurons. Load up the Input data, including taste and temperature PN data using lines identified in other studies. Combine them into one matrix and plot 
@@ -101,7 +101,7 @@ For supplementary, plot heatmaps of the LHLN and PNs
 ```{r, echo=FALSE}
 LHLNs_PNs<-readin(file = "FigureS5/Local_memb_x_Mask_PN_PN.txt")
 aheatmap(x = LHLNs_PNs, filename=paste0("FigureS5/LHLNs_PNs.pdf")
-         ,fontsize = 10, cexRow = 0.5, cexCol =5,  treeheight = 8, Colv = FALSE)
+         ,fontsize = 10, cexRow =0.8, cexCol =5, col="black", treeheight = 8, Colv = FALSE)
 ```
 For the supplementary information, plot heatmaps of the MBON axons versus LHON dendrites 
 ```{r, echo=FALSE}
