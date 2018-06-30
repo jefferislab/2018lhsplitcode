@@ -51,7 +51,7 @@ Plot the overlap matrix of LHON axons by neuropil regions as a heatmap
 ```{r, echo=FALSE}
 LHON_neuropil<-readin("FigureS4/Output_axonmemb_x_nc82_nc82.txt")
 aheatmap(x = LHON_neuropil, filename=paste0("FigureS4/LHON_neuropil.pdf")
-       , fontsize = 12, Colv = FALSE,  cexRow = 2, cexCol = 5, treeheight = 10)
+       , fontsize = 10, Colv = FALSE,  cexRow = 2, cexCol = 5, treeheight = 10, col="black")
 ```
 Determine if there is a correlation between axon overlap and dendrite overlap 
 ```{r, echo=FALSE}
