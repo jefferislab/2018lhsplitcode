@@ -69,11 +69,12 @@ aheatmap(x = LHON_DAN, filename=paste0("Figure6/LHON_DAN.pdf")
          ,fontsize = 10, cexRow = 3, col="black",annRow = LHONtransmitter, annColors  = list(transmitter_col),  cexCol = 0.65, treeheight = 12, Colv = FALSE, annLegend = FALSE)
 ```
 
-
-For the supplementary information, plot heatmaps of the MBON axons versus the LHINs 
+Calculate the number of LHONs that interact with MB-associated neurons. Use a threshold of 15% as per V2 paper  
 ```{r, echo=FALSE}
-
-
+full.mb<-cbind(LHON_DAN, LHON_MBON)
+full.mb<-(full.mb>15)
+full.mb[full.mb==TRUE]<-1
+table(rowSums(full.mb))
 ```
 
 ```{r, echo=FALSE}
