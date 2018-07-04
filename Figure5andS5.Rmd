@@ -70,12 +70,9 @@ aheatmap(x = LHON_PN, filename=paste0("FigureS5/LHON_PN.pdf")
          ,fontsize = 9, cexRow = 1, cexCol = 2, Colv = FALSE, treeheight = 15, col="black")
 ```
 
-LH gets other inputs in addition to the projection neurons. Load up the Input data, including taste and temperature PN data using lines identified in other studies. Combine them into one matrix and plot 
+LH gets other inputs in addition to the projection neurons. Load up the Input data, including taste and temperature PN data using lines identified in other studies.  
 ```{r, echo=FALSE}
-LHON_LHIN<-t(readin("Figure5/Input_axonmemb_x_Output_den.txt"))
-LHON_Temp<-readin("Figure5/Output_den_x_TempPNs_axonmemb.txt")
-LHON_Taste<-readin("Figure5/Output_den_x_TastePNs_axonmemb.txt")
-LHON_input<-cbind(LHON_LHIN, LHON_Temp, LHON_Taste)
+LHON_input<-t(readin("Figure5/Output_den_x_LHIN_axonmemb.txt"))
 ```
 
 Next want to remove unwanted/unclear cell-types from the input designation and add modality tracts to the LHON_input heatmap. 
@@ -101,13 +98,13 @@ For supplementary, plot heatmaps of the LHLN and PNs
 ```{r, echo=FALSE}
 LHLNs_PNs<-readin(file = "FigureS5/Local_memb_x_Mask_PN_PN.txt")
 aheatmap(x = LHLNs_PNs, filename=paste0("FigureS5/LHLNs_PNs.pdf")
-         ,fontsize = 10, cexRow =0.8, cexCol =5, col="black", treeheight = 8, Colv = FALSE)
+         ,fontsize = 8, cexRow =0.8, cexCol =5, col="black", treeheight = 8, Colv = FALSE)
 ```
 For the supplementary information, plot heatmaps of the MBON axons versus LHON dendrites 
 ```{r, echo=FALSE}
 LHONden_MBON<-readin(file = "FigureS5/Output_den_x_MBON_axon.txt")
-aheatmap(x = LHONden_MBON, filename=paste0("Figure6/LHONden_MBON.pdf")
-         ,fontsize = 10, cexRow = 3, cexCol = 0.65, treeheight = 12, Colv = FALSE)
+aheatmap(x = LHONden_MBON, filename=paste0("FigureS5/LHONden_MBON.pdf")
+         ,fontsize = 10, cexRow = 3, cexCol = 0.65, col="black", treeheight = 12, Colv = FALSE)
 ```
 
 For the supplementary information, plot heatmaps of the MBON axons versus LHLNs
