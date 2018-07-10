@@ -51,16 +51,17 @@ set3d("front", 0.7, zoom = 0.5) #Function that sets the angle and zoom
 
 View(filter(lhns::lh.mcfo[,], old.cell.type=="4A"))
 
+#Examine the 4A MCFO for each line that gave an aversive phenotype
+behavhits<-filter(lhns::lh.mcfo[,], linecode=="L1475" | linecode=="L1477" | linecode=="L542" | linecode=="L1354" | linecode=="L1735")
+behavhits<-na.omit(group_by(behavhits,linecode, cell.type))
+tally(behavhits)
+
+
 #Looking at the other data in Shahar's paper
 clear3d()
 plot3d(subset(lhns::most.lhns, cell.type=="AV4c2"), soma=T)
 plot3d(FCWB)
 set3d("front", 0.7, zoom = 0.5) #Function that sets the angle and zoom
-
-
-
-
-
 
 
 #Look at the dotprops for my splits
