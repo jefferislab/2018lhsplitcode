@@ -15,7 +15,7 @@ here()
 file.symlink("/Users/dolanm/Google Drive/SplitGAL4_Paper/Figures/Figure1", here())
 ```
 
-Load in the data from the NA_master file and plot the number of cell-types covered by good or ideal lines
+Load in the data from the NA_master file and plot the number of anatomical groups covered by good or ideal lines
 ```{r, echo=FALSE}
 TypeFreq<-read.xlsx("Figure1/Neuroanatomy_Master.xlsx",1)
 TypeFreq<-select(TypeFreq, 1:4)
@@ -24,12 +24,20 @@ TypeFreq<-mutate(TypeFreq, NAgood=NAgood+Ideal)
 totalclust<-length(TypeFreq[,1])
 Totals<-rbind(totalclust-length(filter(TypeFreq, NAgood==0)[,1]),totalclust - length(filter(TypeFreq, Ideal==0)[,1]))
 ```
+Short code to determine how many cell-types (rather than anatomical groups) are covered in the screen. How many of those are single cell-types and how many are unitary groups of more than one cell-type that cooccur in the split-GAL4 lines 
+```{r, echo=FALSE}
+celltype<-as.character(TypeFreq$FinalNames)
+celltype<-na.omit(celltype)
+Single_celltype<-length(grep(pattern = "/", x = celltype, value = TRUE, invert = TRUE))-1 #Remove the 4As from singletons 
+double_celltype<-2*(length(grep(pattern = "/", x = celltype, value = TRUE))) 
+Single_celltype+double_celltype+5 #for 4A
+```
 
 Plot the Cell-Type coverage
 ```{r, echo=FALSE}
 pdf(here("Figure1/CellType_coverage.pdf"), width = 2.57, height = 4.68)
-barplot(Totals, names=c("Good", "Ideal"), ylim=c(0,totalclust), ylab="Cell-Types Covered"
-        , col=c("blue", "orange"), axes=FALSE, beside=TRUE,  cex.lab=1.5, cex.names=1.2)
+barplot(Totals, names=c("Good", "Ideal"), ylim=c(0,totalclust), ylab="Anatomy Groups Covered"
+        , col=c("blue", "orange"), axes=FALSE, beside=TRUE,  cex.lab=1.2, cex.names=1.2, width=2)
 axis(2, at = c(0, 20, 40, 60, 80, totalclust))
 
 dev.off()
