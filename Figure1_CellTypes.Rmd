@@ -22,7 +22,7 @@ TypeFreq<-select(TypeFreq, 1:4)
 TypeFreq[is.na(TypeFreq)]<-0
 TypeFreq<-mutate(TypeFreq, NAgood=NAgood+Ideal)
 totalclust<-length(TypeFreq[,1])
-Totals<-rbind(totalclust-length(filter(TypeFreq, NAgood==0)[,1]), totalclust - length(filter(TypeFreq, Ideal==0)[,1]))
+Totals<-rbind(totalclust-length(filter(TypeFreq, NAgood==0)[,1]),totalclust - length(filter(TypeFreq, Ideal==0)[,1]))
 ```
 
 Plot the Cell-Type coverage

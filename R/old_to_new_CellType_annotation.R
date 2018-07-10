@@ -31,28 +31,37 @@ set3d <- function(pos = c("front", "left", "back", "right",
 }
 
 #Chunk to plot individual LH MCFO data according to the number, line and imagecode. Can also see what cell-types were catagorized by MCFO and polarity
-View(lh.mcfo[,])
+View(lhns::lh.mcfo[,])
 
 #To look at other data (flycircuit, tracings)
-View(most.lhns[,])
+View(lhns::most.lhns[,])
 
 #Example using the linecode
 clear3d()
-plot3d(subset(lh.mcfo, old.cell.type=="16A"), soma=T)
+plot3d(subset(lhns::lh.mcfo, old.cell.type=="154"), soma=T)
 plot3d(FCWB)
 set3d("front", 0.7, zoom = 0.5) #Function that sets the angle and zoom
 
 #Example using the new nomenclature
 clear3d()
-plot3d(subset(lh.mcfo, cell.type=="PV4c3"), soma=T)
+plot3d(subset(lhns::lh.mcfo, cell.type=="AD1d1"), soma=T)
 plot3d(FCWB)
 set3d("front", 0.7, zoom = 0.5) #Function that sets the angle and zoom
 
+
+View(filter(lhns::lh.mcfo[,], old.cell.type=="4A"))
+
 #Looking at the other data in Shahar's paper
 clear3d()
-plot3d(subset(most.lhns, cell.type=="PV4b3"), soma=T)
+plot3d(subset(lhns::most.lhns, cell.type=="AV4c2"), soma=T)
 plot3d(FCWB)
 set3d("front", 0.7, zoom = 0.5) #Function that sets the angle and zoom
+
+
+
+
+
+
 
 #Look at the dotprops for my splits
 clear3d()
