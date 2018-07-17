@@ -50,8 +50,35 @@ file.symlink("/Users/dolanm/Google Drive/SplitGAL4_Paper/Figures/FigureS4", here
 Plot the overlap matrix of LHON axons by neuropil regions as a heatmap 
 ```{r, echo=FALSE}
 LHON_neuropil<-readin("FigureS4/Output_axonmemb_x_nc82_nc82.txt")
-aheatmap(x = LHON_neuropil, filename=paste0("FigureS4/LHON_neuropil.pdf")
-       , fontsize = 10, Colv = FALSE,  cexRow = 2, cexCol = 5, treeheight = 10, col="black")
+NAmaster<-read.xlsx(file="/Users/dolanm/Dropbox/JFRCvisitorProject/Neuroanatomy_Master.xlsx", sheetIndex = 1)
+LHnts<-select(NAmaster,LHClusters., Neurotransmitter)
+LHnewnames<-select(NAmaster,LHClusters., FinalNames)
+
+#Define the colours for NT annotations 
+transmitter_col<-c("red", "dodgerblue", "forestgreen", "dark magenta", "gold")
+names(transmitter_col)<-c("Acetylcholine", "GABA", "Glutamate", "Acetylcholine, GABA",  "Acetylcholine, Glutamate" )
+
+#The types need to be in the same order as the dimnames in the matrix to be read in correctly. Need to match
+#up these two dataframes. 
+LHONs<-dimnames(LHON_neuropil)[[1]] #Pull in the cell-types in question and get their order 
+LHONs<-data.frame(Type=LHONs)
+LHnts$LHClusters.<-paste0("CellType_", LHnts$LHClusters.) #Add CellType to all the names to match them with left_join, remove this with new naming system 
+names(LHnts)<-c("Type", "Neurotransmitter")
+#Now join the dimnames with the annotation::cell-types to find matches but maintain matrix order.
+#Note you just feed aheatmap the ordered annotations, not the annotation::cell-types pairs.
+#Use different columns to add more tracks 
+LHONtransmitter<-left_join(x = LHONs, y = LHnts, "Type")
+LHONtransmitter<-data.frame(Neurotransmitter=as.character(LHONtransmitter$Neurotransmitter))
+
+#Change the names of LH anatomy groups to their cell-types 
+oldnames<-lapply(X = dimnames(LHON_neuropil), FUN = gsub, pattern = "CellType_", replacement = "", fixed = TRUE)
+oldname1<-data.frame(oldnames=oldnames[[1]]) #For the row names
+oldname1<-merge(x=oldname1, by.x ="oldnames", y=LHnewnames, by.y = "LHClusters.", sort =FALSE)
+newname1<-as.character(oldname1$FinalNames)
+
+dimnames(LHON_neuropil)[[1]]<-newname1
+aheatmap(x = LHON_neuropil, filename=paste0("FigureS4/LHON_neuropil.pdf"), annRow = LHONtransmitter, annColors  = list(transmitter_col)
+       , fontsize = 10, Colv = FALSE,  cexRow = 2, cexCol = 5, treeheight = 10, col="black", annLegend = FALSE)
 ```
 Determine if there is a correlation between axon overlap and dendrite overlap 
 ```{r, echo=FALSE}

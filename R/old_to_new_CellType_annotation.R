@@ -56,7 +56,6 @@ behavhits<-filter(lhns::lh.mcfo[,], linecode=="L1475" | linecode=="L1477" | line
 behavhits<-na.omit(group_by(behavhits,linecode, cell.type))
 tally(behavhits)
 
-
 #Looking at the other data in Shahar's paper
 clear3d()
 plot3d(subset(lhns::most.lhns, cell.type=="AV4c2"), soma=T)

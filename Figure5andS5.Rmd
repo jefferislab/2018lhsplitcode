@@ -1,4 +1,4 @@
----
+ ---
 title: "Figure5"
 author: "Mike"
 ---
@@ -62,10 +62,20 @@ set3d("front", 0.7, zoom = 0.8) #Function that sets the angle and zoom
 snapshot3d("Figure5/AVLP.png")
 ```
 
-Load up the LHON dendrite x PN axon overlap data and plot it for the supplementary figure S5. Need to edit the matrix to remove some unclear glomeruli
+Load up the LHON dendrite x PN axon overlap data and plot it for the supplementary figure S5. 
 ```{r, echo=FALSE}
 LHON_PN<-readin("FigureS5/Output_den_x_Mask_PN_PN.txt")
 
+#To rename the LH cell-types
+NAmaster<-read.xlsx(file="/Users/dolanm/Dropbox/JFRCvisitorProject/Neuroanatomy_Master.xlsx", sheetIndex = 1)
+LHnewnames<-select(NAmaster,LHClusters., FinalNames)
+
+oldnames<-lapply(X = dimnames(LHON_PN), FUN = gsub, pattern = "CellType_", replacement = "", fixed = TRUE)
+oldname1<-data.frame(oldnames=oldnames[[1]]) #For the row names
+oldname1<-merge(x=oldname1, by.x ="oldnames", y=LHnewnames, by.y = "LHClusters.", sort =FALSE)
+newname1<-as.character(oldname1$FinalNames)
+
+dimnames(LHON_PN)<-list(newname1, dimnames(LHON_PN)[[2]])
 aheatmap(x = LHON_PN, filename=paste0("FigureS5/LHON_PN.pdf")
          ,fontsize = 9, cexRow = 1, cexCol = 2, Colv = FALSE, treeheight = 15, col="black")
 ```
@@ -78,10 +88,12 @@ LHON_input<-t(readin("Figure5/Output_den_x_LHIN_axonmemb.txt"))
 Next want to remove unwanted/unclear cell-types from the input designation and add modality tracts to the LHON_input heatmap. 
 ```{r, echo=FALSE}
 #celltype_remove<-c("145", "PN1", "PN2",  )
-#subset(LHON_LHON, colnames(LHON_LHON)!="CellType_29A")
-
 #write.xlsx(x = dimnames(LHON_input)[[2]], file = "Figure5/LHON_Input_tracks.xlsx")
+#subset(LHON_input, colnames(LHON_input)!="CellType_29A")  
+
 modality<-read.xlsx(file = "Figure5/LHON_Input_tracks.xlsx", sheetIndex = 1)
+
+dimnames(LHON_input)<-list(newname1,modality$newname)
 aheatmap(x = LHON_input, filename=paste0("Figure5/LHON_input.pdf")
          , annCol  = modality$Modality, col="black", annColors = "rainbow", annLegend = FALSE
          ,fontsize = 10, cexRow = 2, cexCol = 0.6, Colv = FALSE, treeheight = 8)
@@ -97,12 +109,23 @@ aheatmap(x = LHIN_all, filename=paste0("Figure5/LHON_LHIN_PN.pdf")
 For supplementary, plot heatmaps of the LHLN and PNs
 ```{r, echo=FALSE}
 LHLNs_PNs<-readin(file = "FigureS5/Local_memb_x_Mask_PN_PN.txt")
+
+#Calculate the LHLN new names
+oldnames<-lapply(X = dimnames(LHLNs_PNs), FUN = gsub, pattern = "CellType_", replacement = "", fixed = TRUE)
+oldname2<-data.frame(oldnames=oldnames[[1]]) #For the row names
+oldname2<-merge(x=oldname2, by.x ="oldnames", y=LHnewnames, by.y = "LHClusters.", sort =FALSE)
+newname2<-as.character(oldname2$FinalNames)
+
+dimnames(LHLNs_PNs)[[1]]<-newname2
 aheatmap(x = LHLNs_PNs, filename=paste0("FigureS5/LHLNs_PNs.pdf")
-         ,fontsize = 8, cexRow =0.8, cexCol =5, col="black", treeheight = 8, Colv = FALSE)
+         ,fontsize = 9, cexRow =1.5, cexCol =5, col="black", treeheight = 8,
+         , cellwidth = 16,Colv = FALSE)
 ```
+
 For the supplementary information, plot heatmaps of the MBON axons versus LHON dendrites 
 ```{r, echo=FALSE}
 LHONden_MBON<-readin(file = "FigureS5/Output_den_x_MBON_axon.txt")
+dimnames(LHONden_MBON)<-list(newname1, gsub(dimnames(LHONden_MBON)[[2]], pattern = "CellType_", replacement = ""))
 aheatmap(x = LHONden_MBON, filename=paste0("FigureS5/LHONden_MBON.pdf")
          ,fontsize = 10, cexRow = 3, cexCol = 0.65, col="black", treeheight = 12, Colv = FALSE)
 ```

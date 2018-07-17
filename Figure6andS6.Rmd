@@ -27,8 +27,9 @@ Prelinimary code chunk to read in the NT tracks
 #Load up the revelent datafiles 
 LHON_MBON<-readin(file = "Figure6/Output_axonmemb_x_MBON_axon.txt")
 MBONnts<-read.xlsx(file = "Figure6/MBON_NT.xlsx",sheetIndex = 1)
-LHnts<-read.xlsx(file="/Users/dolanm/Dropbox/JFRCvisitorProject/Neuroanatomy_Master.xlsx", sheetIndex = 1)
-LHnts<-select(LHnts,LHClusters., Neurotransmitter)
+NAmaster<-read.xlsx(file="/Users/dolanm/Dropbox/JFRCvisitorProject/Neuroanatomy_Master.xlsx", sheetIndex = 1)
+LHnts<-select(NAmaster,LHClusters., Neurotransmitter)
+LHnewnames<-select(NAmaster,LHClusters., FinalNames)
 
 #The annotation::cell-types need to be in the same order as the dimnames in the matrix to be read in correctly. Need to match
 #up these two dataframes. 
@@ -54,6 +55,14 @@ MBONtransmitter<-data.frame(Neurotransmitter=as.character(MBONtransmitter$Neurot
 transmitter_col<-c("red", "dodgerblue", "forestgreen", "dark magenta", "gold")
 names(transmitter_col)<-c("Acetylcholine", "GABA", "Glutamate", "Acetylcholine, GABA",  "Acetylcholine, Glutamate" )
 
+#Change the names of LH anatomy groups to their cell-types 
+oldnames<-lapply(X = dimnames(LHON_MBON), FUN = gsub, pattern = "CellType_", replacement = "", fixed = TRUE)
+oldname1<-data.frame(oldnames=oldnames[[1]]) #For the row names
+oldname1<-merge(x=oldname1, by.x ="oldnames", y=LHnewnames, by.y = "LHClusters.", sort =FALSE)
+newname1<-as.character(oldname1$FinalNames)
+
+dimnames(LHON_MBON)<-list(newname1,gsub(dimnames(LHON_MBON)[[2]], pattern = "CellType_", replacement = "")) 
+
 #Plot the MBON and LHONs with neurotransmitter tracks 
 aheatmap(x = LHON_MBON, filename=paste0("Figure6/LHON_MBON.pdf")
          ,fontsize = 10, cexRow = 3, col="black",annRow = LHONtransmitter, annCol=MBONtransmitter, annColors  = list(transmitter_col), cexCol = 0.65, treeheight = 12, Colv = FALSE, annLegend = FALSE)
@@ -62,9 +71,8 @@ aheatmap(x = LHON_MBON, filename=paste0("Figure6/LHON_MBON.pdf")
 Load and plot the overlap analysis of LHON axons and DAN dendrites 
 ```{r, echo=FALSE}
 LHON_DAN<-readin(file = "Figure6/Output_axonmemb_x_DAN_den.txt")
-aheatmap(x = LHON_DAN, filename=paste0("Figure6/LHON_DAN.pdf")
-         ,fontsize = 10, cexRow = 3, cexCol = 0.65, treeheight = 12, Colv = FALSE)
 
+dimnames(LHON_DAN)<-list(newname1,gsub(dimnames(LHON_DAN)[[2]], pattern = "CellType_", replacement = "")) 
 aheatmap(x = LHON_DAN, filename=paste0("Figure6/LHON_DAN.pdf")
          ,fontsize = 10, cexRow = 3, col="black",annRow = LHONtransmitter, annColors  = list(transmitter_col),  cexCol = 0.65, treeheight = 12, Colv = FALSE, annLegend = FALSE)
 ```

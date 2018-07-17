@@ -140,7 +140,7 @@ dimnames(LHON_LHON)<-list(newname1, newname1)
 #LHON_LHON<-LHON_LHON[,-23]
 aheatmap(x = LHON_LHON, filename=paste0("Figure4/LHON_LHON.pdf")
          ,fontsize = 9, col="black", cexRow = 1, cexCol =1, Rowv = FALSE, treeheight = 10 
-         ,annRow = LHONtransmitter, annCol = LHONtransmitter
+         ,annRow = LHONtransmitter, annCol = LHONtransmitter, cellwidth = 8, cellheight = 8
          ,annColors = list(transmitter_col), annLegend = FALSE)
 ```
 
@@ -174,7 +174,7 @@ newname2<-as.character(oldname2$FinalNames)
 dimnames(LHON_LHLN)<-list(newname2, newname1)
 #Plot the heatmap
 aheatmap(x = LHON_LHLN, filename="Figure4/LHON_LHLN.pdf"
-         ,fontsize = 10, cexRow = .8, cexCol = 5.3, treeheight = 10, col="black"
-         ,annRow = LHLNtransmitter, annCol = LHONtransmitter, annColors = list(transmitter_col), annLegend = FALSE)
+         ,fontsize = 10, cexRow = .7, cexCol = 7, treeheight = 9, col="black"
+         ,annRow = LHLNtransmitter, annCol = LHONtransmitter, annColors = list(transmitter_col), annLegend = FALSE, cellwidth = 12)
 ```
 
